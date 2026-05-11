@@ -341,61 +341,67 @@
         <div class="flex items-center gap-1 mb-6">
             <button onclick="switchTab('quota')" id="tab-quota"
                 class="tab-btn px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 text-white bg-gradient-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-500/50">
-                Quota
+                <span data-i18n="nav.quota">Quota</span>
             </button>
             <button onclick="switchTab('usage')" id="tab-usage"
                 class="tab-btn px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 text-gray-400 hover:text-gray-200 hidden">
-                Usage
+                <span data-i18n="nav.usage">Usage</span>
             </button>
             <button onclick="switchTab('remote')" id="tab-remote"
                 class="tab-btn px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 text-gray-400 hover:text-gray-200">
-                Remote
+                <span data-i18n="nav.remote">Remote</span>
             </button>
             <button onclick="switchTab('routing')" id="tab-routing"
                 class="tab-btn px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 text-gray-400 hover:text-gray-200">
-                Routing <span class="text-[10px] text-gray-500">(Beta)</span>
+                <span data-i18n="nav.routing">Routing</span> <span class="text-[10px] text-gray-500" data-i18n="nav.beta">(Beta)</span>
             </button>
             <button onclick="switchTab('logs')" id="tab-logs"
                 class="tab-btn px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 text-gray-400 hover:text-gray-200">
-                Logs
+                <span data-i18n="nav.logs">Logs</span>
             </button>
             <button onclick="switchTab('settings')" id="tab-settings"
                 class="tab-btn px-5 py-2 rounded-lg font-bold text-sm transition-all duration-200 text-gray-400 hover:text-gray-200">
-                Settings
+                <span data-i18n="nav.settings">Settings</span>
             </button>
         </div>
 
         <!-- Toast -->
         <div id="copy-toast"
             class="fixed bottom-32 right-8 bg-gray-800 text-gray-300 px-4 py-2 rounded-lg text-sm opacity-0 translate-x-8 transition-all duration-300 pointer-events-none z-50">
-            Copied!</div>
+            <span data-i18n="toast.copied">Copied!</span></div>
 
         <!-- ==================== QUOTA TAB ==================== -->
         <div id="tab-content-quota" class="tab-content">
             <!-- Quota Header -->
             <div class="mb-6 flex items-start justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-300">Quota</h1>
-                    <p id="plan-info" class="text-gray-500 text-sm font-bold mt-1">Loading...</p>
+                    <h1 class="text-3xl font-bold text-gray-300" data-i18n="quota.title">Quota</h1>
+                    <p id="plan-info" class="text-gray-500 text-sm font-bold mt-1" data-i18n="common.loading">Loading...</p>
                 </div>
                 <div class="flex flex-col items-end gap-2">
                     <div class="flex items-center gap-3">
                         <div class="refresh-btn inline-block">
+                            <button onclick="openDiagnosticsModal()" id="diagnostics-btn"
+                                class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
+                                <span data-i18n="diagnostics.button">Diagnostics</span>
+                            </button>
+                        </div>
+                        <div class="refresh-btn inline-block">
                             <button onclick="openIdeLogoutModal()" id="ide-logout-btn"
                                 class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                                Log IDE Out
+                                <span data-i18n="quota.logIdeOut">Log IDE Out</span>
                             </button>
                         </div>
                         <div class="refresh-btn inline-block" id="add-account-container">
                             <button onclick="openAddAccountModal()" id="add-account-btn"
                                 class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                                Add
+                                <span data-i18n="common.add">Add</span>
                             </button>
                         </div>
                         <div class="refresh-btn inline-block" id="refresh-container">
                             <button onclick="refreshAll(true)" id="refresh-btn"
                                 class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                                Refresh
+                                <span data-i18n="common.refresh">Refresh</span>
                             </button>
                         </div>
                     </div>
@@ -421,12 +427,12 @@
         <div id="tab-content-usage" class="tab-content hidden">
             <div class="mb-8 flex items-start justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-300">Usage Statistics</h1>
-                    <p class="text-gray-500 text-sm mt-1 font-bold">Token consumption and estimated cost</p>
+                    <h1 class="text-3xl font-bold text-gray-300" data-i18n="usage.title">Usage Statistics</h1>
+                    <p class="text-gray-500 text-sm mt-1 font-bold" data-i18n="usage.subtitle">Token consumption and estimated cost</p>
                 </div>
                 <div class="refresh-btn inline-block">
                     <button onclick="fetchUsageData()" class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                        Refresh
+                        <span data-i18n="common.refresh">Refresh</span>
                     </button>
                 </div>
             </div>
@@ -435,7 +441,7 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
                 <!-- Daily Usage Chart (3/5 width) -->
                 <div class="md:col-span-3 rounded-xl border border-gray-800 p-5">
-                    <div class="text-base font-bold text-gray-300 mb-4">Daily Usage</div>
+                    <div class="text-base font-bold text-gray-300 mb-4" data-i18n="usage.daily">Daily Usage</div>
                     <div style="height: 200px; max-height: 200px;">
                         <canvas id="daily-chart"></canvas>
                     </div>
@@ -446,23 +452,23 @@
                     style="min-height: 240px;">
                     <div class="space-y-6">
                         <div class="text-center">
-                            <div class="text-gray-400 text-base mb-3">Today Cost</div>
+                            <div class="text-gray-400 text-base mb-3" data-i18n="usage.todayCost">Today Cost</div>
                             <div id="usage-today-cost" class="text-4xl font-bold text-cyan-400">$0.00</div>
-                            <div id="usage-today-tokens" class="text-[11px] text-gray-500 mt-2 hidden">0 tokens</div>
+                            <div id="usage-today-tokens" class="text-[11px] text-gray-500 mt-2 hidden">0 <span data-i18n="usage.tokens">tokens</span></div>
                         </div>
                         <div class="text-center border-t border-gray-700 pt-6">
-                            <div class="text-gray-400 text-base mb-3">Total Cost</div>
+                            <div class="text-gray-400 text-base mb-3" data-i18n="usage.totalCost">Total Cost</div>
                             <div id="usage-total-large" class="text-4xl font-bold text-cyan-400">$0.00</div>
-                            <div id="usage-total-tokens" class="text-[11px] text-gray-500 mt-2">0 tokens</div>
+                            <div id="usage-total-tokens" class="text-[11px] text-gray-500 mt-2">0 <span data-i18n="usage.tokens">tokens</span></div>
                         </div>
                     </div>
-                    <div class="text-[10px] text-gray-600 mt-5 text-center">Based on public API pricing</div>
+                    <div class="text-[10px] text-gray-600 mt-5 text-center" data-i18n="usage.pricingNote">Based on public API pricing</div>
                 </div>
             </div>
 
             <!-- Model Distribution with integrated breakdown -->
             <div class="rounded-xl border border-gray-800 p-5">
-                <div class="text-sm font-bold text-gray-300 mb-4">Model Distribution</div>
+                <div class="text-sm font-bold text-gray-300 mb-4" data-i18n="usage.modelDistribution">Model Distribution</div>
                 <div class="flex flex-col md:flex-row md:items-center gap-10 py-4">
                     <!-- Chart on left -->
                     <div class="flex-shrink-0 ml-4" style="width: 240px; height: 240px;">
@@ -470,7 +476,7 @@
                     </div>
                     <!-- Model details on right -->
                     <div id="usage-model-list" class="flex-1 space-y-1 flex flex-col">
-                        <div class="text-gray-500 text-sm text-center py-4">No usage data yet</div>
+                        <div class="text-gray-500 text-sm text-center py-4" data-i18n="usage.noData">No usage data yet</div>
                     </div>
                 </div>
             </div>
@@ -492,11 +498,11 @@
         <div id="tab-content-logs" class="tab-content hidden">
             <div class="mb-6 flex items-start justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-300">Logs</h1>
-                    <p class="text-gray-500 text-sm font-bold mt-1">Live server output (recent lines only)</p>
+                    <h1 class="text-2xl font-bold text-gray-300" data-i18n="logs.title">Logs</h1>
+                    <p class="text-gray-500 text-sm font-bold mt-1" data-i18n="logs.subtitle">Live server output (recent lines only)</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span id="logs-status" class="text-xs text-gray-500">Disconnected</span>
+                    <span id="logs-status" class="text-xs text-gray-500" data-i18n="status.disconnected">Disconnected</span>
                 </div>
             </div>
 
@@ -504,24 +510,24 @@
                 <div class="refresh-btn inline-block">
                     <button onclick="refreshLogs()" id="logs-refresh"
                         class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                        Reload
+                        <span data-i18n="common.reload">Reload</span>
                     </button>
                 </div>
                 <div class="refresh-btn inline-block">
                     <button onclick="toggleLogsPause()" id="logs-toggle"
                         class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                        Pause
+                        <span data-i18n="common.pause">Pause</span>
                     </button>
                 </div>
                 <div class="refresh-btn inline-block">
                     <button onclick="clearLogView()" id="logs-clear"
                         class="px-4 py-1.5 rounded-lg font-bold text-gray-300 text-sm">
-                        Clear
+                        <span data-i18n="common.clear">Clear</span>
                     </button>
                 </div>
                 <label class="flex items-center gap-2 text-xs text-gray-500">
                     <input type="checkbox" id="logs-follow" checked>
-                    Follow
+                    <span data-i18n="logs.follow">Follow</span>
                 </label>
             </div>
 
@@ -535,18 +541,32 @@
         <!-- ==================== SETTINGS TAB ==================== -->
         <div id="tab-content-settings" class="tab-content hidden">
             <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-300">Settings</h1>
-                <p class="text-gray-500 text-sm font-bold mt-1">Configure application behavior</p>
+                <h1 class="text-2xl font-bold text-gray-300" data-i18n="settings.title">Settings</h1>
+                <p class="text-gray-500 text-sm font-bold mt-1" data-i18n="settings.subtitle">Configure application behavior</p>
             </div>
 
             <div class="grid grid-cols-1 gap-4 max-w-5xl lg:grid-cols-3">
                 <div class="space-y-4">
+                    <!-- Language -->
+                    <label
+                        class="flex items-center justify-between gap-4 p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
+                        <div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.language">Language</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.languageDesc">Switch dashboard display language</div>
+                        </div>
+                        <select id="setting-language"
+                            class="bg-black/50 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 outline-none hover:border-gray-500">
+                            <option value="en">English</option>
+                            <option value="zh-CN">中文</option>
+                        </select>
+                    </label>
+
                     <!-- Preload Routing -->
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Preload Routing</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Load Routing tab in background for instant
+                            <div class="text-gray-200 font-medium" data-i18n="settings.preloadRouting">Preload Routing</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.preloadRoutingDesc">Load Routing tab in background for instant
                                 switching
                             </div>
                         </div>
@@ -557,8 +577,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Auto Start ngrok</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Automatically start ngrok tunnel on server launch
+                            <div class="text-gray-200 font-medium" data-i18n="settings.autoNgrok">Auto Start ngrok</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.autoNgrokDesc">Automatically start ngrok tunnel on server launch
                             </div>
                         </div>
                         <input type="checkbox" id="setting-auto-ngrok" class="toggle-switch">
@@ -568,8 +588,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Auto Open Dashboard</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Open browser to Dashboard on server start</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.autoOpen">Auto Open Dashboard</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.autoOpenDesc">Open browser to Dashboard on server start</div>
                         </div>
                         <input type="checkbox" id="setting-auto-open" class="toggle-switch" checked>
                     </label>
@@ -580,8 +600,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Auto Refresh Quota</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Automatically refresh quota and usage every 10 minutes</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.autoRefresh">Auto Refresh Quota</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.autoRefreshDesc">Automatically refresh quota and usage every 10 minutes</div>
                         </div>
                         <input type="checkbox" id="setting-auto-refresh" class="toggle-switch" checked>
                     </label>
@@ -590,8 +610,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Privacy Protection</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Mask emails and usernames</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.privacy">Privacy Protection</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.privacyDesc">Mask emails and usernames</div>
                         </div>
                         <input type="checkbox" id="setting-privacy-mode" class="toggle-switch">
                     </label>
@@ -600,8 +620,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Compact Layout</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Reduce Antigravity cards to 2 bars</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.compact">Compact Layout</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.compactDesc">Reduce Antigravity cards to 2 bars</div>
                         </div>
                         <input type="checkbox" id="setting-compact-layout" class="toggle-switch">
                     </label>
@@ -612,8 +632,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Track Token Usage</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Estimate cost based on token consumption</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.trackUsage">Track Token Usage</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.trackUsageDesc">Estimate cost based on token consumption</div>
                         </div>
                         <input type="checkbox" id="setting-track-usage" class="toggle-switch" checked>
                     </label>
@@ -622,8 +642,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Capture Logs</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Store recent console logs for dashboard</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.captureLogs">Capture Logs</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.captureLogsDesc">Store recent console logs for dashboard</div>
                         </div>
                         <input type="checkbox" id="setting-capture-logs" class="toggle-switch">
                     </label>
@@ -632,8 +652,8 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Optimize Quota Sorting</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Sort cards by remaining quota within each provider</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.optimizeSort">Optimize Quota Sorting</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.optimizeSortDesc">Sort cards by remaining quota within each provider</div>
                         </div>
                         <input type="checkbox" id="setting-optimize-quota-sort" class="toggle-switch">
                     </label>
@@ -642,11 +662,33 @@
                     <label
                         class="flex items-center justify-between p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
                         <div>
-                            <div class="text-gray-200 font-medium">Auto Restart (Watchdog)</div>
-                            <div class="text-gray-500 text-xs mt-0.5">Restart server automatically after a crash</div>
+                            <div class="text-gray-200 font-medium" data-i18n="settings.autoRestart">Auto Restart (Watchdog)</div>
+                            <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.autoRestartDesc">Restart server automatically after a crash</div>
                         </div>
                         <input type="checkbox" id="setting-auto-restart" class="toggle-switch">
                     </label>
+                </div>
+                <div class="lg:col-span-2">
+                    <div class="rounded-xl border border-gray-800 p-4">
+                        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            <div>
+                                <div class="text-gray-200 font-medium" data-i18n="settings.updateTitle">Updates</div>
+                                <div class="text-gray-500 text-xs mt-0.5" data-i18n="settings.updateDesc">Check GitHub releases and update source installs in place.</div>
+                                <div id="update-status" class="mt-3 text-xs text-gray-500" data-i18n="settings.updateIdle">No update check has run yet.</div>
+                                <pre id="update-output" class="mt-3 hidden max-h-40 overflow-auto whitespace-pre-wrap rounded-lg border border-gray-800 bg-black/30 p-3 text-[11px] leading-5 text-gray-500"></pre>
+                            </div>
+                            <div class="flex shrink-0 gap-2">
+                                <button onclick="checkUpdates(true)" id="update-check-btn"
+                                    class="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 font-bold text-sm hover:border-gray-500 hover:text-gray-300 transition-all">
+                                    <span data-i18n="settings.checkUpdate">Check</span>
+                                </button>
+                                <button onclick="applyUpdate()" id="update-apply-btn" disabled
+                                    class="px-4 py-2 rounded-lg border border-cyan-800/70 text-cyan-500 font-bold text-sm opacity-50 cursor-not-allowed transition-all">
+                                    <span data-i18n="settings.applyUpdate">Update</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -654,24 +696,24 @@
             <div class="mt-6 flex gap-3 max-w-lg flex-wrap">
                 <button onclick="saveAllSettings()"
                     class="px-4 py-2.5 rounded-xl border border-gray-700 text-gray-400 font-bold text-sm hover:border-gray-500 hover:text-gray-300 transition-all">
-                    Save
+                    <span data-i18n="common.save">Save</span>
                 </button>
                 <button onclick="resetSettings()"
                     class="px-4 py-2.5 rounded-xl border border-gray-700 text-gray-400 font-bold text-sm hover:border-gray-500 hover:text-gray-300 transition-all">
-                    Reset
+                    <span data-i18n="common.reset">Reset</span>
                 </button>
                 <button onclick="enableAllSettings()"
                     class="px-4 py-2.5 rounded-xl border border-gray-700 text-gray-400 font-bold text-sm hover:border-gray-500 hover:text-gray-300 transition-all">
-                    Enable All
+                    <span data-i18n="settings.enableAll">Enable All</span>
                 </button>
                 <button onclick="disableAllSettings()"
                     class="px-4 py-2.5 rounded-xl border border-gray-700 text-gray-400 font-bold text-sm hover:border-gray-500 hover:text-gray-300 transition-all">
-                    Disable All
+                    <span data-i18n="settings.disableAll">Disable All</span>
                 </button>
             </div>
 
             <div class="mt-6 text-gray-600 text-xs">
-                Settings are saved to ~/.anti-api/settings.json. Click Save to apply changes.
+                <span data-i18n="settings.saveNote">Settings are saved to ~/.anti-api/settings.json. Click Save to apply changes.</span>
             </div>
 
         </div>
@@ -684,29 +726,51 @@
         </div>
     </div>
 
+    <!-- Diagnostics Modal -->
+    <div id="diagnostics-modal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-[#111111] border border-[#2f253f] rounded-2xl w-full max-w-4xl p-6 text-gray-200 max-h-[82vh] flex flex-col">
+            <div class="flex items-center justify-between mb-4 flex-shrink-0">
+                <div>
+                    <h2 class="text-lg font-bold" data-i18n="diagnostics.title">Account Diagnostics</h2>
+                    <p class="text-xs text-gray-500 mt-1" data-i18n="diagnostics.subtitle">Checks local files, commands, and configuration used by account import.</p>
+                </div>
+                <button onclick="closeDiagnosticsModal()" class="text-gray-500 hover:text-gray-300">✕</button>
+            </div>
+            <div class="flex items-center justify-between gap-3 mb-4 flex-shrink-0">
+                <div id="diagnostics-summary" class="text-xs text-gray-500" data-i18n="diagnostics.idle">Run diagnostics to inspect account setup.</div>
+                <button onclick="runDiagnostics()" id="diagnostics-run-btn"
+                    class="px-4 py-2 rounded-lg border border-cyan-700/60 text-cyan-400 font-bold text-sm hover:border-cyan-500 hover:text-cyan-300 transition-all">
+                    <span data-i18n="diagnostics.run">Run</span>
+                </button>
+            </div>
+            <div id="diagnostics-result" class="space-y-3 overflow-y-auto pr-1 text-sm"></div>
+        </div>
+    </div>
+
     <!-- IDE Logout Confirm Modal -->
     <div id="ide-logout-modal"
         class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50">
         <div class="bg-[#111111] border border-[#2f253f] rounded-2xl w-full max-w-md p-6 text-gray-200">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold">Log IDE Out</h2>
+                <h2 class="text-lg font-bold" data-i18n="settings.ideLogoutTitle">Log IDE Out</h2>
                 <button onclick="closeIdeLogoutModal()" class="text-gray-500 hover:text-gray-300">✕</button>
             </div>
 
             <!-- IDE current status -->
             <div id="ide-status" class="mb-4 px-4 py-3 rounded-lg bg-black/40 border border-gray-800 text-sm text-gray-400">
                 <span class="inline-block w-2 h-2 rounded-full bg-gray-600 mr-1.5 align-middle"></span>
-                Checking IDE status...
+                <span data-i18n="settings.ideLogoutChecking">Checking IDE status...</span>
             </div>
 
             <div class="space-y-3 text-sm text-gray-400 mb-5">
-                <p>This will perform the following actions:</p>
+                <p data-i18n="settings.ideLogoutBody">This will perform the following actions:</p>
                 <ol class="list-decimal list-inside space-y-1.5 text-gray-500">
-                    <li><span class="text-gray-300">Quit</span> the running Antigravity IDE (graceful shutdown via <code class="text-gray-400 text-xs bg-black/40 px-1 py-0.5 rounded">SIGTERM</code>)</li>
-                    <li><span class="text-gray-300">Clear</span> the login session from the IDE's local database</li>
+                    <li><span class="text-gray-300" data-i18n="settings.ideLogoutQuit">Quit</span></li>
+                    <li><span class="text-gray-300" data-i18n="settings.ideLogoutClear">Clear</span></li>
                 </ol>
                 <div class="mt-3 px-3 py-2 rounded-lg border border-yellow-900/40 bg-yellow-950/20 text-yellow-500/80 text-xs">
-                    <strong>Warning:</strong> The IDE will be closed. Save your work before proceeding. Anti-API's own accounts are not affected.
+                    <strong data-i18n="quota.ideLogoutWarningTitle">Warning:</strong> <span data-i18n="quota.ideLogoutWarningBody">The IDE will be closed. Save your work before proceeding. Anti-API's own accounts are not affected.</span>
                 </div>
             </div>
 
@@ -715,11 +779,11 @@
             <div class="flex justify-end gap-3">
                 <button onclick="closeIdeLogoutModal()"
                     class="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-sm hover:border-gray-500 hover:text-gray-300 transition-all">
-                    Cancel
+                    <span data-i18n="settings.ideLogoutCancel">Cancel</span>
                 </button>
                 <button onclick="confirmIdeLogout()" id="ide-logout-confirm-btn"
                     class="px-4 py-2 rounded-lg border border-cyan-700/60 text-cyan-400 font-bold text-sm hover:border-cyan-500 hover:text-cyan-300 transition-all">
-                    Confirm Logout
+                    <span data-i18n="settings.ideLogoutConfirm">Confirm Logout</span>
                 </button>
             </div>
         </div>
@@ -728,32 +792,81 @@
     <!-- Add Account Modal -->
     <div id="add-account-modal"
         class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-[#111111] border border-[#2f253f] rounded-2xl w-full max-w-md p-6 text-gray-200">
+        <div class="bg-[#111111] border border-[#2f253f] rounded-2xl w-full max-w-3xl p-6 text-gray-200">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold">Add Account</h2>
+                <h2 class="text-lg font-bold" data-i18n="quota.addAccountTitle">Add Account</h2>
                 <button onclick="closeAddAccountModal()" class="text-gray-500 hover:text-gray-300">✕</button>
             </div>
-            <div class="space-y-2">
-                <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
-                    onclick="startProviderLogin('antigravity')">
-                    Antigravity
-                </button>
-                <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
-                    onclick="startProviderLogin('codex')">
-                    Codex
-                </button>
-                <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
-                    onclick="startProviderLogin('copilot')">
-                    GitHub Copilot
-                </button>
-                <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
-                    onclick="startProviderLogin('zed')">
-                    Zed
-                </button>
+
+            <div class="grid gap-5 md:grid-cols-[220px_1fr]">
+                <div class="space-y-2">
+                    <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
+                        onclick="startProviderLogin('antigravity')">
+                        <span>Antigravity</span>
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
+                        onclick="startProviderLogin('codex')">
+                        <span>Codex</span>
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
+                        onclick="startProviderLogin('copilot')">
+                        <span>GitHub Copilot</span>
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
+                        onclick="startProviderLogin('zed')">
+                        <span>Zed</span>
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg border border-[#2f253f] hover:border-gray-500"
+                        onclick="startProviderLogin('kiro')">
+                        <span>Kiro</span>
+                    </button>
+                </div>
+
+                <div class="rounded-xl border border-[#2f253f] bg-black/25 overflow-hidden">
+                    <div class="grid grid-cols-[1.2fr_repeat(3,1fr)] border-b border-[#2f253f] text-[11px] font-bold text-gray-500">
+                        <div class="px-3 py-2"></div>
+                        <div class="px-2 py-2 text-center" data-i18n="quota.capQuota">Quota</div>
+                        <div class="px-2 py-2 text-center" data-i18n="quota.capProxy">Proxy</div>
+                        <div class="px-2 py-2 text-center" data-i18n="quota.capMultiAccount">Multi-account</div>
+                    </div>
+                    <div class="divide-y divide-[#2f253f]/70 text-xs">
+                        <div class="grid grid-cols-[1.2fr_repeat(3,1fr)] items-center">
+                            <div class="px-3 py-3 font-semibold text-gray-200">Antigravity</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-gray-600" data-i18n="common.no">No</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                        </div>
+                        <div class="grid grid-cols-[1.2fr_repeat(3,1fr)] items-center">
+                            <div class="px-3 py-3 font-semibold text-gray-200">Codex</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                        </div>
+                        <div class="grid grid-cols-[1.2fr_repeat(3,1fr)] items-center">
+                            <div class="px-3 py-3 font-semibold text-gray-200">GitHub Copilot</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                        </div>
+                        <div class="grid grid-cols-[1.2fr_repeat(3,1fr)] items-center">
+                            <div class="px-3 py-3 font-semibold text-gray-200">Zed</div>
+                            <div class="px-2 py-3 text-center text-gray-600" data-i18n="common.no">No</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-gray-600" data-i18n="common.no">No</div>
+                        </div>
+                        <div class="grid grid-cols-[1.2fr_repeat(3,1fr)] items-center">
+                            <div class="px-3 py-3 font-semibold text-gray-200">Kiro</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-cyan-300" data-i18n="common.yes">Yes</div>
+                            <div class="px-2 py-3 text-center text-gray-600" data-i18n="common.no">No</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div id="add-account-status" class="mt-4 text-xs text-gray-400 hidden"></div>
             <div id="codex-device" class="mt-4 hidden">
-                <div class="text-sm text-gray-400 mb-2">Open the browser and enter this code:</div>
+                <div class="text-sm text-gray-400 mb-2" data-i18n="quota.openBrowserCode">Open the browser and enter this code:</div>
                 <div class="flex items-center gap-2">
                     <div id="codex-code"
                         class="px-3 py-2 rounded-lg bg-black border border-[#2f253f] font-mono text-sm text-gray-200">
@@ -761,12 +874,12 @@
                     </div>
                     <button onclick="copyCodexCode()"
                         class="px-3 py-2 rounded-lg border border-[#2f253f] text-xs hover:border-gray-500">
-                        Copy
+                        <span data-i18n="common.copy">Copy</span>
                     </button>
                 </div>
             </div>
             <div id="copilot-device" class="mt-4 hidden">
-                <div class="text-sm text-gray-400 mb-2">Open the browser and enter this code:</div>
+                <div class="text-sm text-gray-400 mb-2" data-i18n="quota.openBrowserCode">Open the browser and enter this code:</div>
                 <div class="flex items-center gap-2">
                     <div id="copilot-code"
                         class="px-3 py-2 rounded-lg bg-black border border-[#2f253f] font-mono text-sm text-gray-200">
@@ -774,11 +887,11 @@
                     </div>
                     <button onclick="copyCopilotCode()"
                         class="px-3 py-2 rounded-lg border border-[#2f253f] text-xs hover:border-gray-500">
-                        Copy
+                        <span data-i18n="common.copy">Copy</span>
                     </button>
                 </div>
                 <a id="copilot-link" href="#" target="_blank"
-                    class="inline-block mt-3 text-blue-400 hover:text-blue-300 text-xs">Open verification page</a>
+                    class="inline-block mt-3 text-blue-400 hover:text-blue-300 text-xs" data-i18n="quota.openVerificationPage">Open verification page</a>
             </div>
         </div>
     </div>
@@ -786,6 +899,7 @@
     <script>
         const API_BASE = 'http://localhost:8964';
         const CODEX_SESSION_KEY = 'anti-api-codex-session';
+        const LANGUAGE_STORAGE_KEY = 'anti-api-language';
         let loadingDismissed = false;
         let codexPopup = null;
         let codexPopupUrl = null;
@@ -802,10 +916,394 @@
         const maxLogLines = 1000;
         let lastRefreshTime = null;
         let autoRefreshInterval = null;
+        let updateChecked = false;
+        function detectPreferredLanguage() {
+            const candidates = [];
+            if (Array.isArray(navigator.languages)) candidates.push(...navigator.languages);
+            if (navigator.language) candidates.push(navigator.language);
+            try {
+                const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+                if (intlLocale) candidates.push(intlLocale);
+            } catch { }
+            return candidates.join(' ').toLowerCase().includes('zh') ? 'zh-CN' : 'en';
+        }
+        let currentLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) || detectPreferredLanguage();
+
+        const I18N = {
+            en: {
+                'nav.quota': 'Quota',
+                'nav.usage': 'Usage',
+                'nav.remote': 'Remote',
+                'nav.routing': 'Routing',
+                'nav.beta': '(Beta)',
+                'nav.logs': 'Logs',
+                'nav.settings': 'Settings',
+                'common.add': 'Add',
+                'common.refresh': 'Refresh',
+                'common.reload': 'Reload',
+                'common.pause': 'Pause',
+                'common.resume': 'Resume',
+                'common.clear': 'Clear',
+                'common.save': 'Save',
+                'common.reset': 'Reset',
+                'common.loading': 'Loading...',
+                'common.connecting': 'Connecting...',
+                'common.accountCount': '{count} account(s)',
+                'common.copy': 'Copy',
+                'common.yes': 'Yes',
+                'common.no': 'No',
+                'toast.copied': 'Copied!',
+                'diagnostics.button': 'Diagnostics',
+                'diagnostics.title': 'Account Diagnostics',
+                'diagnostics.subtitle': 'Checks local files, commands, and configuration used by account import.',
+                'diagnostics.idle': 'Run diagnostics to inspect account setup.',
+                'diagnostics.run': 'Run',
+                'diagnostics.running': 'Running diagnostics...',
+                'diagnostics.done': 'Diagnostics complete: {pass} pass, {warn} warn, {fail} fail.',
+                'diagnostics.failed': 'Diagnostics failed: {message}',
+                'diagnostics.command': 'Command',
+                'diagnostics.output': 'Output',
+                'diagnostics.noOutput': 'No output',
+                'quota.title': 'Quota',
+                'quota.logIdeOut': 'Log IDE Out',
+                'quota.detailsUnavailable': 'Quota details unavailable',
+                'quota.tapToPing': 'Tap to ping account',
+                'usage.title': 'Usage Statistics',
+                'usage.subtitle': 'Token consumption and estimated cost',
+                'usage.daily': 'Daily Usage',
+                'usage.todayCost': 'Today Cost',
+                'usage.totalCost': 'Total Cost',
+                'usage.tokens': 'tokens',
+                'usage.in': 'In',
+                'usage.out': 'Out',
+                'usage.pricingNote': 'Based on public API pricing',
+                'usage.modelDistribution': 'Model Distribution',
+                'usage.noData': 'No usage data yet',
+                'usage.loading': 'Loading...',
+                'usage.refreshed': 'Usage refreshed',
+                'usage.loadFailed': 'Failed to load usage',
+                'logs.title': 'Logs',
+                'logs.subtitle': 'Live server output (recent lines only)',
+                'logs.follow': 'Follow',
+                'logs.disabledLine': 'Log capture is disabled. Enable it in Settings.',
+                'settings.title': 'Settings',
+                'settings.subtitle': 'Configure application behavior',
+                'settings.language': 'Language',
+                'settings.languageDesc': 'Switch dashboard display language',
+                'settings.preloadRouting': 'Preload Routing',
+                'settings.preloadRoutingDesc': 'Load Routing tab in background for instant switching',
+                'settings.autoNgrok': 'Auto Start ngrok',
+                'settings.autoNgrokDesc': 'Automatically start ngrok tunnel on server launch',
+                'settings.autoOpen': 'Auto Open Dashboard',
+                'settings.autoOpenDesc': 'Open browser to Dashboard on server start',
+                'settings.autoRefresh': 'Auto Refresh Quota',
+                'settings.autoRefreshDesc': 'Automatically refresh quota and usage every 10 minutes',
+                'settings.privacy': 'Privacy Protection',
+                'settings.privacyDesc': 'Mask emails and usernames',
+                'settings.compact': 'Compact Layout',
+                'settings.compactDesc': 'Reduce Antigravity cards to 2 bars',
+                'settings.trackUsage': 'Track Token Usage',
+                'settings.trackUsageDesc': 'Estimate cost based on token consumption',
+                'settings.captureLogs': 'Capture Logs',
+                'settings.captureLogsDesc': 'Store recent console logs for dashboard',
+                'settings.optimizeSort': 'Optimize Quota Sorting',
+                'settings.optimizeSortDesc': 'Sort cards by remaining quota within each provider',
+                'settings.autoRestart': 'Auto Restart (Watchdog)',
+                'settings.autoRestartDesc': 'Restart server automatically after a crash',
+                'settings.enableAll': 'Enable All',
+                'settings.disableAll': 'Disable All',
+                'settings.saveNote': 'Settings are saved to ~/.anti-api/settings.json. Click Save to apply changes.',
+                'settings.saved': 'Settings saved!',
+                'settings.saveFailed': 'Failed to save settings',
+                'settings.defaults': 'Reset to defaults',
+                'settings.allEnabled': 'All settings enabled',
+                'settings.allDisabled': 'All settings disabled',
+                'settings.updateTitle': 'Updates',
+                'settings.updateDesc': 'Check GitHub releases and update source installs in place.',
+                'settings.updateIdle': 'No update check has run yet.',
+                'settings.checkUpdate': 'Check',
+                'settings.applyUpdate': 'Update',
+                'settings.updateChecking': 'Checking for updates...',
+                'settings.updateApplying': 'Updating. The service will restart if the update succeeds...',
+                'settings.updateCurrent': 'Already up to date. Current: {current}.',
+                'settings.updateAvailable': 'Update available: {current} -> {latest}.',
+                'settings.updateBlocked': '{message} {hint}',
+                'settings.updateRestarting': 'Update applied. Restarting service...',
+                'settings.updateFailed': 'Update failed: {message}',
+                'settings.ideLogoutTitle': 'Log IDE Out',
+                'settings.ideLogoutChecking': 'Checking IDE status...',
+                'settings.ideLogoutBody': 'This will perform the following actions:',
+                'settings.ideLogoutQuit': 'Quit the running Antigravity IDE (graceful shutdown via SIGTERM)',
+                'settings.ideLogoutClear': 'Clear the login session from the IDE local database',
+                'settings.ideLogoutWarning': 'Warning: The IDE will be closed. Save your work before proceeding. Anti-API accounts are not affected.',
+                'settings.ideLogoutCancel': 'Cancel',
+                'settings.ideLogoutConfirm': 'Confirm Logout',
+                'settings.ideLogoutClosing': 'Closing IDE...',
+                'settings.ideLogoutDone': 'Done',
+                'settings.ideLogoutLoggedOut': 'IDE logged out',
+                'settings.ideLogoutFailed': 'Logout failed',
+                'settings.ideLogoutNetwork': 'Network error',
+                'status.connected': 'Connected',
+                'status.disconnected': 'Disconnected',
+                'status.disabled': 'Disabled',
+                'status.paused': 'Paused',
+                'status.refreshing': 'Refreshing...',
+                'status.refreshed': 'Refreshed',
+                'status.failed': 'Failed: {message}',
+                'quota.connectionFailed': 'Connection failed',
+                'quota.connectionUnable': 'Unable to connect to {base}',
+                'quota.retry': 'Retry',
+                'quota.refreshing': 'Refreshing...',
+                'quota.refreshed': 'Refreshed',
+                'quota.none': 'No accounts yet',
+                'quota.addToView': 'Add accounts to see quota cards',
+                'quota.unavailable': 'Unavailable',
+                'quota.copiedModel': 'Copied: {model}',
+                'quota.removedAccount': 'Removed: {name}',
+                'quota.failedWithError': 'Failed: {message}',
+                'quota.errorWithMessage': 'Error: {message}',
+                'quota.removeConfirm': 'Remove account "{name}"?',
+                'quota.removeAccountLabel': 'Remove account',
+                'quota.latency': 'Latency {value}s',
+                'quota.copyTunnel': 'Copied: {value}',
+                'quota.copyFailed': 'Failed to copy: {value}',
+                'quota.unknownError': 'Unknown error',
+                'quota.connecting': 'Connecting...',
+                'common.updated': 'Updated',
+                'quota.ideStatusLoggedIn': 'IDE logged in: {email}',
+                'quota.ideStatusNotLoggedIn': 'IDE not logged in',
+                'quota.ideStatusUnable': 'Unable to check IDE status',
+                'quota.ideLogoutClosingNote': 'Open Antigravity manually to sign in with a different account.',
+                'quota.ideLogoutAuthCleared': 'Auth cleared',
+                'quota.ideLogoutWas': ' (was: {email})',
+                'quota.ideLoggedOut': 'IDE logged out',
+                'quota.addAccountTitle': 'Add Account',
+                'quota.capQuota': 'Quota monitoring',
+                'quota.capProxy': 'Reverse proxy',
+                'quota.capMultiAccount': 'Multi-account',
+                'quota.openBrowserCode': 'Open the browser and enter this code:',
+                'quota.openVerificationPage': 'Open verification page',
+                'quota.ideLogoutWarningTitle': 'Warning:',
+                'quota.ideLogoutWarningBody': 'The IDE will be closed. Save your work before proceeding. Anti-API accounts are not affected.',
+                'quota.importedCopilot': 'Imported Copilot: {name}',
+                'quota.importedCodexMany': 'Imported {count} Codex accounts',
+                'quota.importedCodexOne': 'Imported Codex: {name}',
+                'quota.importedKiroMany': 'Imported {count} Kiro accounts',
+                'quota.connected': 'Connected: {name}',
+                'quota.authFailed': 'Authentication failed',
+                'quota.authError': 'Authentication error: {message}',
+                'quota.codexResuming': 'Resuming Codex authentication...',
+                'quota.authStarting': 'Starting authentication...',
+                'quota.waitingCopilot': 'Waiting for GitHub Copilot authorization...',
+                'quota.waitingCodex': 'Waiting for Codex CLI authorization...',
+                'quota.copilotAuthFailed': 'Copilot authentication failed',
+                'quota.codexAuthFailed': 'Codex authentication failed',
+                'quota.usageCleared': 'Usage data cleared',
+                'quota.resetUsageFailed': 'Failed to reset usage',
+            },
+            'zh-CN': {
+                'nav.quota': '配额',
+                'nav.usage': '用量',
+                'nav.remote': '远程',
+                'nav.routing': '路由',
+                'nav.beta': '（测试）',
+                'nav.logs': '日志',
+                'nav.settings': '设置',
+                'common.add': '添加',
+                'common.refresh': '刷新',
+                'common.reload': '重新加载',
+                'common.pause': '暂停',
+                'common.resume': '继续',
+                'common.clear': '清空',
+                'common.save': '保存',
+                'common.reset': '重置',
+                'common.loading': '加载中...',
+                'common.connecting': '连接中...',
+                'common.accountCount': '{count} 个账号',
+                'common.copy': '复制',
+                'common.yes': '是',
+                'common.no': '否',
+                'toast.copied': '已复制！',
+                'diagnostics.button': '诊断助手',
+                'diagnostics.title': '账号诊断助手',
+                'diagnostics.subtitle': '检查添加账号所需的本地文件、命令和配置。',
+                'diagnostics.idle': '运行诊断以检查账号添加环境。',
+                'diagnostics.run': '运行',
+                'diagnostics.running': '正在诊断...',
+                'diagnostics.done': '诊断完成：{pass} 项通过，{warn} 项警告，{fail} 项失败。',
+                'diagnostics.failed': '诊断失败：{message}',
+                'diagnostics.command': '命令',
+                'diagnostics.output': '输出',
+                'diagnostics.noOutput': '无输出',
+                'quota.title': '配额',
+                'quota.logIdeOut': '退出 IDE 登录',
+                'quota.detailsUnavailable': '配额详情不可用',
+                'quota.tapToPing': '点击测试账号',
+                'usage.title': '用量统计',
+                'usage.subtitle': 'Token 消耗与预估成本',
+                'usage.daily': '每日用量',
+                'usage.todayCost': '今日成本',
+                'usage.totalCost': '总成本',
+                'usage.tokens': '个 token',
+                'usage.in': '输入',
+                'usage.out': '输出',
+                'usage.pricingNote': '基于公开 API 价格估算',
+                'usage.modelDistribution': '模型分布',
+                'usage.noData': '暂无用量数据',
+                'usage.loading': '加载中...',
+                'usage.refreshed': '用量已刷新',
+                'usage.loadFailed': '加载用量失败',
+                'logs.title': '日志',
+                'logs.subtitle': '实时服务输出（仅最近日志）',
+                'logs.follow': '跟随',
+                'logs.disabledLine': '日志捕获已关闭。请在设置中启用。',
+                'settings.title': '设置',
+                'settings.subtitle': '配置应用行为',
+                'settings.language': '语言',
+                'settings.languageDesc': '切换控制面板显示语言',
+                'settings.preloadRouting': '预加载路由',
+                'settings.preloadRoutingDesc': '后台加载路由页面，实现即时切换',
+                'settings.autoNgrok': '自动启动 ngrok',
+                'settings.autoNgrokDesc': '服务启动时自动开启 ngrok 隧道',
+                'settings.autoOpen': '自动打开控制面板',
+                'settings.autoOpenDesc': '服务启动时自动打开浏览器',
+                'settings.autoRefresh': '自动刷新配额',
+                'settings.autoRefreshDesc': '每 10 分钟自动刷新配额与用量',
+                'settings.privacy': '隐私保护',
+                'settings.privacyDesc': '隐藏邮箱和用户名',
+                'settings.compact': '紧凑布局',
+                'settings.compactDesc': 'Antigravity 卡片只显示 2 个指标',
+                'settings.trackUsage': '跟踪 Token 用量',
+                'settings.trackUsageDesc': '根据 Token 消耗预估成本',
+                'settings.captureLogs': '捕获日志',
+                'settings.captureLogsDesc': '保存最近控制台日志供面板查看',
+                'settings.optimizeSort': '优化配额排序',
+                'settings.optimizeSortDesc': '按各 provider 剩余配额排序卡片',
+                'settings.autoRestart': '自动重启（守护）',
+                'settings.autoRestartDesc': '服务崩溃后自动重启',
+                'settings.enableAll': '全部启用',
+                'settings.disableAll': '全部禁用',
+                'settings.saveNote': '设置保存到 ~/.anti-api/settings.json。点击保存后生效。',
+                'settings.saved': '设置已保存！',
+                'settings.saveFailed': '保存设置失败',
+                'settings.defaults': '已重置为默认值',
+                'settings.allEnabled': '已启用全部设置',
+                'settings.allDisabled': '已禁用全部设置',
+                'settings.updateTitle': '检查更新',
+                'settings.updateDesc': '检查 GitHub release，并对源码安装执行原地更新。',
+                'settings.updateIdle': '尚未检查更新。',
+                'settings.checkUpdate': '检查',
+                'settings.applyUpdate': '一键更新',
+                'settings.updateChecking': '正在检查更新...',
+                'settings.updateApplying': '正在更新。成功后服务会自动重启...',
+                'settings.updateCurrent': '已是最新版本。当前：{current}。',
+                'settings.updateAvailable': '发现新版本：{current} -> {latest}。',
+                'settings.updateBlocked': '{message} {hint}',
+                'settings.updateRestarting': '更新已应用，正在重启服务...',
+                'settings.updateFailed': '更新失败：{message}',
+                'settings.ideLogoutTitle': '退出 IDE 登录',
+                'settings.ideLogoutChecking': '正在检查 IDE 状态...',
+                'settings.ideLogoutBody': '这将执行以下操作：',
+                'settings.ideLogoutQuit': '退出正在运行的 Antigravity IDE（通过 SIGTERM 平滑关闭）',
+                'settings.ideLogoutClear': '清除 IDE 本地数据库中的登录会话',
+                'settings.ideLogoutWarning': '警告：IDE 将被关闭。继续前请先保存工作。Anti-API 账户不会受影响。',
+                'settings.ideLogoutCancel': '取消',
+                'settings.ideLogoutConfirm': '确认退出',
+                'settings.ideLogoutClosing': '正在关闭 IDE...',
+                'settings.ideLogoutDone': '完成',
+                'settings.ideLogoutLoggedOut': 'IDE 已退出登录',
+                'settings.ideLogoutFailed': '退出登录失败',
+                'settings.ideLogoutNetwork': '网络错误',
+                'status.connected': '已连接',
+                'status.disconnected': '未连接',
+                'status.disabled': '已关闭',
+                'status.paused': '已暂停',
+                'status.refreshing': '刷新中...',
+                'status.refreshed': '已刷新',
+                'status.failed': '失败：{message}',
+                'quota.connectionFailed': '连接失败',
+                'quota.connectionUnable': '无法连接到 {base}',
+                'quota.retry': '重试',
+                'quota.refreshing': '刷新中...',
+                'quota.refreshed': '已刷新',
+                'quota.none': '暂无账号',
+                'quota.addToView': '添加账号后显示配额卡片',
+                'quota.unavailable': '不可用',
+                'quota.copiedModel': '已复制：{model}',
+                'quota.removedAccount': '已移除：{name}',
+                'quota.failedWithError': '失败：{message}',
+                'quota.errorWithMessage': '错误：{message}',
+                'quota.removeConfirm': '移除账号“{name}”？',
+                'quota.removeAccountLabel': '移除账号',
+                'quota.latency': '延迟 {value} 秒',
+                'quota.copyTunnel': '已复制：{value}',
+                'quota.copyFailed': '复制失败：{value}',
+                'quota.unknownError': '未知错误',
+                'quota.connecting': '连接中...',
+                'common.updated': '已更新',
+                'quota.ideStatusLoggedIn': 'IDE 已登录：{email}',
+                'quota.ideStatusNotLoggedIn': 'IDE 未登录',
+                'quota.ideStatusUnable': '无法检查 IDE 状态',
+                'quota.ideLogoutClosingNote': '请手动打开 Antigravity 以使用其他账号登录。',
+                'quota.ideLogoutAuthCleared': '已清除授权',
+                'quota.ideLogoutWas': '（原来是：{email}）',
+                'quota.ideLoggedOut': 'IDE 已退出登录',
+                'quota.addAccountTitle': '添加账号',
+                'quota.capQuota': '额度监控',
+                'quota.capProxy': '反向代理',
+                'quota.capMultiAccount': '多账号',
+                'quota.openBrowserCode': '打开浏览器并输入此代码：',
+                'quota.openVerificationPage': '打开验证页面',
+                'quota.ideLogoutWarningTitle': '警告：',
+                'quota.ideLogoutWarningBody': 'IDE 将被关闭。继续前请先保存工作。Anti-API 账户不会受影响。',
+                'quota.importedCopilot': '已导入 Copilot：{name}',
+                'quota.importedCodexMany': '已导入 {count} 个 Codex 账号',
+                'quota.importedCodexOne': '已导入 Codex：{name}',
+                'quota.importedKiroMany': '已导入 {count} 个 Kiro 账号',
+                'quota.connected': '已连接：{name}',
+                'quota.authFailed': '认证失败',
+                'quota.authError': '认证错误：{message}',
+                'quota.codexResuming': '正在恢复 Codex 认证...',
+                'quota.authStarting': '正在开始认证...',
+                'quota.waitingCopilot': '正在等待 GitHub Copilot 授权...',
+                'quota.waitingCodex': '正在等待 Codex CLI 授权...',
+                'quota.copilotAuthFailed': 'Copilot 认证失败',
+                'quota.codexAuthFailed': 'Codex 认证失败',
+                'quota.usageCleared': '用量数据已清除',
+                'quota.resetUsageFailed': '重置用量失败',
+            }
+        };
+
+        function t(key, vars = {}) {
+            let value = I18N[currentLanguage]?.[key] || I18N.en[key] || key;
+            for (const [name, replacement] of Object.entries(vars)) {
+                value = value.replaceAll(`{${name}}`, String(replacement));
+            }
+            return value;
+        }
+
+        function applyLanguage(language = currentLanguage) {
+            currentLanguage = I18N[language] ? language : 'en';
+            document.documentElement.lang = currentLanguage === 'zh-CN' ? 'zh-CN' : 'en';
+            localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLanguage);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.textContent = t(el.dataset.i18n);
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder));
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                el.setAttribute('title', t(el.dataset.i18nTitle));
+            });
+            const select = document.getElementById('setting-language');
+            if (select) select.value = currentLanguage;
+            window.dispatchEvent(new CustomEvent('anti-api-language-change', { detail: { language: currentLanguage } }));
+        }
 
         // Settings with defaults (cached from server)
         let cachedSettings = null;
         const defaultSettings = {
+            language: detectPreferredLanguage(),
             preloadRouting: true,
             autoNgrok: false,
             autoOpenDashboard: true,
@@ -831,6 +1329,7 @@
 
         async function saveAllSettings() {
             const settings = {
+                language: document.getElementById('setting-language').value,
                 preloadRouting: document.getElementById('setting-preload-routing').checked,
                 autoNgrok: document.getElementById('setting-auto-ngrok').checked,
                 autoOpenDashboard: document.getElementById('setting-auto-open').checked,
@@ -850,8 +1349,8 @@
                 });
                 if (res.ok) {
                     cachedSettings = await res.json();
-                    showSettingsToast('Settings saved!');
-                    applySettings(settings);
+                    applySettings(cachedSettings);
+                    showSettingsToast(t('settings.saved'));
                     // Sync to localStorage for other pages
                     localStorage.setItem('anti-api-privacy-mode', String(settings.privacyMode));
                     localStorage.setItem('anti-api-compact-layout', String(settings.compactLayout));
@@ -865,15 +1364,16 @@
                         }
                     }
                 } else {
-                    showSettingsToast('Failed to save settings', true);
+                    showSettingsToast(t('settings.saveFailed'), true);
                 }
             } catch (e) {
-                showSettingsToast('Failed to save settings', true);
+                showSettingsToast(t('settings.saveFailed'), true);
             }
         }
 
         async function resetSettings() {
             // Update UI to defaults
+            document.getElementById('setting-language').value = defaultSettings.language;
             document.getElementById('setting-preload-routing').checked = true;
             document.getElementById('setting-auto-ngrok').checked = false;
             document.getElementById('setting-auto-open').checked = true;
@@ -887,7 +1387,7 @@
 
             // Save defaults to server
             await saveAllSettings();
-            showSettingsToast('Reset to defaults');
+            showSettingsToast(t('settings.defaults'));
         }
 
         async function enableAllSettings() {
@@ -903,7 +1403,7 @@
             document.getElementById('setting-capture-logs').checked = true;
 
             await saveAllSettings();
-            showSettingsToast('All settings enabled');
+            showSettingsToast(t('settings.allEnabled'));
         }
 
         async function disableAllSettings() {
@@ -919,7 +1419,7 @@
             document.getElementById('setting-capture-logs').checked = false;
 
             await saveAllSettings();
-            showSettingsToast('All settings disabled');
+            showSettingsToast(t('settings.allDisabled'));
         }
 
         function showSettingsToast(message, isError = false) {
@@ -934,6 +1434,208 @@
             }, 2000);
         }
 
+        // ====== Updates ======
+
+        function setUpdateButtons({ checking = false, applying = false, canApply = false } = {}) {
+            const checkBtn = document.getElementById('update-check-btn');
+            const applyBtn = document.getElementById('update-apply-btn');
+            if (checkBtn) {
+                checkBtn.disabled = checking || applying;
+                checkBtn.classList.toggle('opacity-50', checking || applying);
+                checkBtn.classList.toggle('cursor-wait', checking || applying);
+            }
+            if (applyBtn) {
+                applyBtn.disabled = checking || applying || !canApply;
+                applyBtn.classList.toggle('opacity-50', checking || applying || !canApply);
+                applyBtn.classList.toggle('cursor-not-allowed', checking || applying || !canApply);
+                applyBtn.classList.toggle('hover:border-cyan-500', canApply && !checking && !applying);
+                applyBtn.classList.toggle('hover:text-cyan-300', canApply && !checking && !applying);
+            }
+        }
+
+        function renderUpdateStatus(data) {
+            const statusEl = document.getElementById('update-status');
+            if (!statusEl) return;
+            const current = data.currentVersion || 'unknown';
+            const latest = data.latestVersion || data.remoteCommit || 'unknown';
+            let text;
+            if (data.canApply) {
+                text = t('settings.updateAvailable', { current, latest });
+                statusEl.className = 'mt-3 text-xs text-cyan-400';
+            } else if (data.status === 'current') {
+                text = t('settings.updateCurrent', { current });
+                statusEl.className = 'mt-3 text-xs text-gray-500';
+            } else {
+                const hint = data.commandHint ? `(${data.commandHint})` : '';
+                text = t('settings.updateBlocked', { message: data.message || t('quota.unknownError'), hint });
+                statusEl.className = data.updateAvailable ? 'mt-3 text-xs text-yellow-300' : 'mt-3 text-xs text-gray-500';
+            }
+            if (data.branch || data.currentCommit || data.remoteCommit) {
+                const parts = [
+                    data.branch ? `branch ${data.branch}` : '',
+                    data.currentCommit ? `local ${data.currentCommit}` : '',
+                    data.remoteCommit ? `remote ${data.remoteCommit}` : '',
+                ].filter(Boolean).join(' · ');
+                text += parts ? ` ${parts}` : '';
+            }
+            statusEl.textContent = text;
+            setUpdateButtons({ canApply: !!data.canApply });
+        }
+
+        async function checkUpdates(manual = false) {
+            const output = document.getElementById('update-output');
+            const statusEl = document.getElementById('update-status');
+            if (output) {
+                output.classList.add('hidden');
+                output.textContent = '';
+            }
+            if (statusEl) {
+                statusEl.textContent = t('settings.updateChecking');
+                statusEl.className = 'mt-3 text-xs text-gray-500';
+            }
+            setUpdateButtons({ checking: true });
+            try {
+                const res = await fetch(`${API_BASE}/updates/check`);
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`);
+                updateChecked = true;
+                renderUpdateStatus(data);
+                if (manual && data.canApply) showSettingsToast(t('settings.updateAvailable', { current: data.currentVersion, latest: data.latestVersion || data.remoteCommit || 'unknown' }));
+            } catch (error) {
+                if (statusEl) {
+                    statusEl.textContent = t('settings.updateFailed', { message: error.message });
+                    statusEl.className = 'mt-3 text-xs text-red-400';
+                }
+                setUpdateButtons({ canApply: false });
+                if (manual) showSettingsToast(t('settings.updateFailed', { message: error.message }), true);
+            }
+        }
+
+        async function applyUpdate() {
+            const output = document.getElementById('update-output');
+            const statusEl = document.getElementById('update-status');
+            if (statusEl) {
+                statusEl.textContent = t('settings.updateApplying');
+                statusEl.className = 'mt-3 text-xs text-cyan-400';
+            }
+            if (output) {
+                output.classList.add('hidden');
+                output.textContent = '';
+            }
+            setUpdateButtons({ applying: true });
+            try {
+                const res = await fetch(`${API_BASE}/updates/apply`, { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`);
+                if (data.output && output) {
+                    output.textContent = data.output;
+                    output.classList.remove('hidden');
+                }
+                renderUpdateStatus(data);
+                if (data.restartScheduled) {
+                    if (statusEl) statusEl.textContent = t('settings.updateRestarting');
+                    showSettingsToast(t('settings.updateRestarting'));
+                } else if (!data.canApply) {
+                    showSettingsToast(data.message || t('settings.updateCurrent', { current: data.currentVersion }));
+                }
+            } catch (error) {
+                if (statusEl) {
+                    statusEl.textContent = t('settings.updateFailed', { message: error.message });
+                    statusEl.className = 'mt-3 text-xs text-red-400';
+                }
+                setUpdateButtons({ canApply: false });
+                showSettingsToast(t('settings.updateFailed', { message: error.message }), true);
+            }
+        }
+
+        // ====== Account Diagnostics ======
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function openDiagnosticsModal() {
+            const modal = document.getElementById('diagnostics-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            const result = document.getElementById('diagnostics-result');
+            if (result && !result.dataset.loaded) {
+                result.innerHTML = '';
+                document.getElementById('diagnostics-summary').textContent = t('diagnostics.idle');
+            }
+        }
+
+        function closeDiagnosticsModal() {
+            const modal = document.getElementById('diagnostics-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function renderDiagnosticCheck(check) {
+            const color = check.status === 'pass'
+                ? 'border-cyan-900/50 bg-cyan-950/10 text-cyan-300'
+                : check.status === 'warn'
+                    ? 'border-yellow-900/50 bg-yellow-950/10 text-yellow-300'
+                    : 'border-red-900/60 bg-red-950/10 text-red-300';
+            const badge = check.status.toUpperCase();
+            const command = check.command
+                ? `<div class="mt-2 text-[11px] text-gray-500"><span class="text-gray-400">${t('diagnostics.command')}:</span> <code class="text-gray-300">${escapeHtml(check.command)}</code></div>`
+                : '';
+            const output = check.output
+                ? `<pre class="mt-2 max-h-28 overflow-auto whitespace-pre-wrap rounded-lg border border-gray-800 bg-black/40 p-2 text-[11px] leading-5 text-gray-500">${escapeHtml(check.output || t('diagnostics.noOutput'))}</pre>`
+                : '';
+            return `
+                <div class="rounded-xl border border-gray-800 bg-black/25 p-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="text-sm font-semibold text-gray-200">${escapeHtml(check.title)}</div>
+                            <div class="mt-1 text-xs text-gray-500">${escapeHtml(check.detail)}</div>
+                        </div>
+                        <span class="shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold ${color}">${badge}</span>
+                    </div>
+                    ${command}
+                    ${output}
+                </div>
+            `;
+        }
+
+        async function runDiagnostics() {
+            const summary = document.getElementById('diagnostics-summary');
+            const resultEl = document.getElementById('diagnostics-result');
+            const runBtn = document.getElementById('diagnostics-run-btn');
+            summary.textContent = t('diagnostics.running');
+            resultEl.dataset.loaded = 'true';
+            resultEl.innerHTML = `<div class="rounded-xl border border-gray-800 bg-black/25 p-4 text-xs text-gray-500">${t('diagnostics.running')}</div>`;
+            runBtn.disabled = true;
+            runBtn.classList.add('opacity-50', 'cursor-wait');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/diagnostics`);
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+                const checks = Array.isArray(data.checks) ? data.checks : [];
+                const counts = checks.reduce((acc, check) => {
+                    acc[check.status] = (acc[check.status] || 0) + 1;
+                    return acc;
+                }, { pass: 0, warn: 0, fail: 0 });
+                summary.textContent = t('diagnostics.done', { pass: counts.pass || 0, warn: counts.warn || 0, fail: counts.fail || 0 });
+                resultEl.innerHTML = checks.map(renderDiagnosticCheck).join('');
+            } catch (error) {
+                summary.textContent = t('diagnostics.failed', { message: error.message });
+                resultEl.innerHTML = `<div class="rounded-xl border border-red-900/60 bg-red-950/10 p-4 text-sm text-red-300">${escapeHtml(error.message)}</div>`;
+            } finally {
+                runBtn.disabled = false;
+                runBtn.classList.remove('opacity-50', 'cursor-wait');
+            }
+        }
+
         // ====== IDE Logout ======
 
         async function fetchIdeStatus() {
@@ -944,12 +1646,12 @@
                 const data = await res.json();
                 if (data.loggedIn) {
                     const display = window._privacyMode ? maskEmail(data.email) : data.email;
-                    el.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1.5 align-middle"></span>IDE logged in: <span class="font-medium text-gray-200">${display}</span>`;
+                    el.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1.5 align-middle"></span>${t('quota.ideStatusLoggedIn', { email: `<span class="font-medium text-gray-200">${display}</span>` })}`;
                 } else {
-                    el.innerHTML = '<span class="inline-block w-2 h-2 rounded-full bg-gray-600 mr-1.5 align-middle"></span>IDE not logged in';
+                    el.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-gray-600 mr-1.5 align-middle"></span>${t('quota.ideStatusNotLoggedIn')}`;
                 }
             } catch {
-                el.innerHTML = '<span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5 align-middle"></span>Unable to check IDE status';
+                el.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5 align-middle"></span>${t('quota.ideStatusUnable')}`;
             }
         }
 
@@ -962,7 +1664,7 @@
             resultEl.innerHTML = '';
             const btn = document.getElementById('ide-logout-confirm-btn');
             btn.disabled = false;
-            btn.textContent = 'Confirm Logout';
+            btn.textContent = t('settings.ideLogoutConfirm');
             btn.classList.remove('opacity-50');
             fetchIdeStatus();
         }
@@ -977,7 +1679,7 @@
             const btn = document.getElementById('ide-logout-confirm-btn');
             const resultEl = document.getElementById('ide-logout-result');
             btn.disabled = true;
-            btn.textContent = 'Closing IDE...';
+            btn.textContent = t('settings.ideLogoutClosing');
             btn.classList.add('opacity-50');
             resultEl.classList.add('hidden');
 
@@ -990,32 +1692,35 @@
 
                 resultEl.classList.remove('hidden');
                 if (data.success) {
-                    const prev = data.previousEmail ? ` (was: ${window._privacyMode ? maskEmail(data.previousEmail) : data.previousEmail})` : '';
-                    const closedNote = data.ideWasRunning ? 'IDE closed &rarr; ' : '';
-                    let msg = `<span class="text-cyan-400">${closedNote}Auth cleared${prev}.</span>`;
-                    msg += `<br><span class="text-gray-500 text-xs mt-1 block">Open Antigravity manually to sign in with a different account.</span>`;
+                    const prev = data.previousEmail ? t('quota.ideLogoutWas', { email: window._privacyMode ? maskEmail(data.previousEmail) : data.previousEmail }) : '';
+                    const closedNote = data.ideWasRunning ? 'IDE closed -> ' : '';
+                    let msg = `<span class="text-cyan-400">${closedNote}${t('quota.ideLogoutAuthCleared')}${prev}.</span>`;
+                    msg += `<br><span class="text-gray-500 text-xs mt-1 block">${t('quota.ideLogoutClosingNote')}</span>`;
                     resultEl.innerHTML = msg;
-                    showSettingsToast('IDE logged out');
-                    btn.textContent = 'Done';
+                    showSettingsToast(t('quota.ideLoggedOut'));
+                    btn.textContent = t('settings.ideLogoutDone');
                     setTimeout(fetchIdeStatus, 3000);
                 } else {
-                    resultEl.innerHTML = `<span class="text-red-400">${data.error || 'Logout failed'}</span>`;
-                    showSettingsToast(data.error || 'Logout failed', true);
+                    resultEl.innerHTML = `<span class="text-red-400">${data.error || t('settings.ideLogoutFailed')}</span>`;
+                    showSettingsToast(data.error || t('settings.ideLogoutFailed'), true);
                     btn.disabled = false;
-                    btn.textContent = 'Confirm Logout';
+                    btn.textContent = t('settings.ideLogoutConfirm');
                     btn.classList.remove('opacity-50');
                 }
             } catch (e) {
                 resultEl.classList.remove('hidden');
-                resultEl.innerHTML = '<span class="text-red-400">Network error</span>';
-                showSettingsToast('Network error', true);
+                resultEl.innerHTML = `<span class="text-red-400">${t('settings.ideLogoutNetwork')}</span>`;
+                showSettingsToast(t('settings.ideLogoutNetwork'), true);
                 btn.disabled = false;
-                btn.textContent = 'Confirm Logout';
+                btn.textContent = t('settings.ideLogoutConfirm');
                 btn.classList.remove('opacity-50');
             }
         }
 
         function applySettings(settings) {
+            if (settings.language) {
+                applyLanguage(settings.language);
+            }
             // Apply autoRefresh
             if (settings.autoRefresh && !autoRefreshInterval) {
                 autoRefreshInterval = setInterval(() => refreshAll(false), 600000);
@@ -1069,8 +1774,18 @@
 
         async function initSettings() {
             const settings = await loadSettings();
+            settings.language = settings.language || localStorage.getItem(LANGUAGE_STORAGE_KEY) || defaultSettings.language;
 
             // Update UI checkboxes
+            document.getElementById('setting-language').value = settings.language;
+            document.getElementById('setting-language').onchange = (event) => {
+                applyLanguage(event.target.value);
+                refreshRoutingIfLoaded();
+                if (remoteLoaded) {
+                    const iframe = document.getElementById('remote-iframe');
+                    if (iframe?.contentWindow) iframe.contentWindow.location.reload();
+                }
+            };
             document.getElementById('setting-preload-routing').checked = settings.preloadRouting;
             document.getElementById('setting-auto-ngrok').checked = settings.autoNgrok;
             document.getElementById('setting-auto-open').checked = settings.autoOpenDashboard;
@@ -1086,6 +1801,7 @@
             window._trackUsage = settings.trackUsage;
             window._optimizeQuotaSort = settings.optimizeQuotaSort;
             window._autoRestart = settings.autoRestart;
+            applyLanguage(settings.language);
 
             // Apply settings
             if (settings.preloadRouting) {
@@ -1109,6 +1825,12 @@
             const diffHr = Math.floor(diffMin / 60);
             const diffDay = Math.floor(diffHr / 24);
 
+            if (currentLanguage === 'zh-CN') {
+                if (diffSec < 60) return '刚刚';
+                if (diffMin < 60) return `${diffMin} 分钟前`;
+                if (diffHr < 24) return `${diffHr} 小时前`;
+                return `${diffDay} 天前`;
+            }
             if (diffSec < 60) return 'just now';
             if (diffMin < 60) return `${diffMin}min ago`;
             if (diffHr < 24) return `${diffHr}hr ago`;
@@ -1119,7 +1841,7 @@
         function updateLastUpdatedDisplay() {
             if (!lastRefreshTime) return;
             document.getElementById('last-updated').innerHTML =
-                `Updated <span class="font-bold text-gray-400">${getRelativeTime(lastRefreshTime)}</span>`;
+                `${t('common.updated')} <span class="font-bold text-gray-400">${getRelativeTime(lastRefreshTime)}</span>`;
         }
 
         function setRefreshState(isRefreshing) {
@@ -1128,14 +1850,14 @@
             if (!refreshBtn) return;
             if (isRefreshing) {
                 refreshBtn.disabled = true;
-                refreshBtn.textContent = 'Refreshing...';
+                refreshBtn.textContent = t('status.refreshing');
                 refreshBtn.classList.add('opacity-70', 'cursor-wait');
                 if (lastUpdated) {
-                    lastUpdated.textContent = 'Refreshing...';
+                    lastUpdated.textContent = t('status.refreshing');
                 }
             } else {
                 refreshBtn.disabled = false;
-                refreshBtn.textContent = 'Refresh';
+                refreshBtn.textContent = t('common.refresh');
                 refreshBtn.classList.remove('opacity-70', 'cursor-wait');
                 updateLastUpdatedDisplay();
             }
@@ -1203,6 +1925,10 @@
             } else {
                 stopLogStream();
             }
+
+            if (tabName === 'settings' && !updateChecked) {
+                checkUpdates(false);
+            }
         }
 
         function loadRemoteContent() {
@@ -1263,7 +1989,7 @@
         }
 
         async function refreshLogs() {
-            setLogsStatus('Refreshing...');
+            setLogsStatus(t('status.refreshing'));
             try {
                 const res = await fetch(`${API_BASE}/logs?limit=${maxLogLines}`);
                 if (!res.ok) {
@@ -1271,30 +1997,30 @@
                 }
                 const data = await res.json();
                 if (!data.enabled) {
-                    renderLogEntries([{ line: 'Log capture is disabled. Enable it in Settings.' }]);
+                    renderLogEntries([{ line: t('logs.disabledLine') }]);
                     lastLogId = data.lastId || lastLogId;
-                    setLogsStatus('Disabled');
+                    setLogsStatus(t('status.disabled'));
                     stopLogStream();
                     return;
                 }
                 renderLogEntries(data.entries || []);
                 lastLogId = data.lastId || lastLogId;
-                setLogsStatus(logsPaused ? 'Paused' : 'Connected');
+                setLogsStatus(logsPaused ? t('status.paused') : t('status.connected'));
             } catch (error) {
-                setLogsStatus(`Failed: ${error.message}`, true);
+                setLogsStatus(t('status.failed', { message: error.message }), true);
             }
         }
 
         function startLogStream() {
             if (logsPaused) return;
             stopLogStream();
-            setLogsStatus('Connecting...');
+            setLogsStatus(t('common.connecting'));
             const source = new EventSource(`${API_BASE}/logs/stream?since=${lastLogId}`);
             logsSource = source;
 
             source.addEventListener('disabled', () => {
-                setLogsStatus('Disabled');
-                renderLogEntries([{ line: 'Log capture is disabled. Enable it in Settings.' }]);
+                setLogsStatus(t('status.disabled'));
+                renderLogEntries([{ line: t('logs.disabledLine') }]);
                 stopLogStream();
             });
 
@@ -1309,11 +2035,11 @@
             });
 
             source.onopen = () => {
-                setLogsStatus('Connected');
+                setLogsStatus(t('status.connected'));
             };
 
             source.onerror = () => {
-                setLogsStatus('Disconnected', true);
+                setLogsStatus(t('status.disconnected'), true);
                 stopLogStream();
                 if (!logsPaused && currentTab === 'logs') {
                     setTimeout(() => startLogStream(), 2000);
@@ -1332,11 +2058,11 @@
             logsPaused = !logsPaused;
             const toggleBtn = document.getElementById('logs-toggle');
             if (toggleBtn) {
-                toggleBtn.textContent = logsPaused ? 'Resume' : 'Pause';
+                toggleBtn.textContent = logsPaused ? t('common.resume') : t('common.pause');
             }
             if (logsPaused) {
                 stopLogStream();
-                setLogsStatus('Paused');
+                setLogsStatus(t('status.paused'));
             } else {
                 startLogStream();
             }
@@ -1584,16 +2310,19 @@
                     </svg>
                 `;
             }
+            if (provider === 'kiro') {
+                return `<span class="provider-logo--fallback">K</span>`;
+            }
             return `<span class="provider-logo--fallback">${provider}</span>`;
         }
 
         function copyModelId(modelId) {
             navigator.clipboard.writeText(modelId);
-            showToast(`Copied: ${modelId}`);
+            showToast(t('quota.copiedModel', { model: modelId }));
         }
 
         async function deleteAccount(accountId, displayName) {
-            if (!confirm(`Remove account "${displayName}"?`)) return;
+            if (!confirm(t('quota.removeConfirm', { name: displayName }))) return;
 
             try {
                 const response = await fetch(`${API_BASE}/accounts/${encodeURIComponent(accountId)}`, {
@@ -1602,13 +2331,13 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showToast(`Removed: ${displayName}`);
+                    showToast(t('quota.removedAccount', { name: displayName }));
                     refreshAll(true);
                 } else {
-                    showToast(`Failed: ${data.error || 'Unknown error'}`);
+                    showToast(t('quota.failedWithError', { message: data.error || t('quota.unknownError') }));
                 }
             } catch (error) {
-                showToast(`Error: ${error.message}`);
+                showToast(t('quota.errorWithMessage', { message: error.message }));
             }
         }
 
@@ -1656,7 +2385,7 @@
 
             // Apply privacy masking based on provider
             const displayName = account.displayName || account.accountId;
-            const maskedName = provider === 'copilot' || provider === 'zed' ? maskUsername(displayName) : maskEmail(displayName);
+            const maskedName = provider === 'copilot' || provider === 'zed' || provider === 'kiro' ? maskUsername(displayName) : maskEmail(displayName);
             const providerLogo = getProviderLogo(provider, cardId);
 
             return `
@@ -1669,7 +2398,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <button onclick="event.stopPropagation(); deleteAccount('${account.accountId}', '${displayName}')"
-                                        class="text-gray-600 hover:text-red-500 transition-colors text-xs px-1" title="Remove account">✕</button>
+                                        class="text-gray-600 hover:text-red-500 transition-colors text-xs px-1" data-i18n-title="quota.removeAccountLabel" title="Remove account">✕</button>
                             </div>
                         </div>
                         <div class="space-y-4">${barHtml}</div>
@@ -1698,7 +2427,7 @@
 
         function sortQuotaAccounts(accounts) {
             if (!window._optimizeQuotaSort) return accounts;
-            const providerOrder = ['antigravity', 'codex', 'copilot', 'zed'];
+            const providerOrder = ['antigravity', 'codex', 'copilot', 'zed', 'kiro'];
             const sorted = [];
             const unknown = [];
 
@@ -1709,6 +2438,7 @@
                     if (provider === 'codex') return getQuotaBarInfo(acc, 'session', '5h');
                     if (provider === 'copilot') return getQuotaBarInfo(acc, 'premium', 'premium');
                     if (provider === 'zed') return getQuotaBarInfo(acc, 'hosted', 'hosted');
+                    if (provider === 'kiro') return getQuotaBarInfo(acc, 'access', 'access');
                     return { percent: 0, resetTime: null };
                 };
                 group.sort((a, b) => {
@@ -1743,8 +2473,8 @@
                 if (data.error) {
                     document.getElementById('quota-grid').innerHTML = `
                         <div class="text-center py-12">
-                            <p class="text-gray-400 mb-2">📊 Quota details unavailable</p>
-                            <p class="text-gray-600 text-sm">Authentication required or quota API unavailable</p>
+                            <p class="text-gray-400 mb-2">📊 ${t('quota.detailsUnavailable')}</p>
+                            <p class="text-gray-600 text-sm">${t('quota.connectionUnable', { base: 'quota API' })}</p>
                         </div>
                     `;
                     return;
@@ -1752,13 +2482,13 @@
 
                 let accounts = data.accounts || [];
                 const planInfo = document.getElementById('plan-info');
-                planInfo.innerHTML = `<span class="text-gray-300">${accounts.length} account(s)</span> <span class="text-gray-600 text-xs">• Tap to ping account</span>`;
+                planInfo.innerHTML = `<span class="text-gray-300">${t('common.accountCount', { count: accounts.length })}</span> <span class="text-gray-600 text-xs">• ${t('quota.tapToPing')}</span>`;
 
                 // Log refresh success
                 console.log(`\x1b[32m200: Quota refreshed (${accounts.length} accounts)\x1b[0m`);
 
                 if (showToastMsg) {
-                    showToast('✓ Refreshed');
+                    showToast(t('quota.refreshed'));
                 }
 
                 accounts = sortQuotaAccounts(accounts);
@@ -1766,8 +2496,8 @@
                 if (accounts.length === 0) {
                     grid.innerHTML = `
                         <div class="text-center py-12">
-                            <p class="text-gray-400 mb-2">No accounts yet</p>
-                            <p class="text-gray-600 text-sm">Add accounts to see quota cards</p>
+                            <p class="text-gray-400 mb-2">${t('quota.none')}</p>
+                            <p class="text-gray-600 text-sm">${t('quota.addToView')}</p>
                         </div>
                     `;
                 } else {
@@ -1790,14 +2520,14 @@
 
             } catch (error) {
                 document.getElementById('plan-info').innerHTML =
-                    `<span class="text-gray-300">Connection failed</span>`;
+                    `<span class="text-gray-300">${t('quota.connectionFailed')}</span>`;
                 document.getElementById('quota-grid').innerHTML = `
                     <div class="text-center py-12">
-                        <p class="text-gray-500 mb-4">Unable to connect to ${API_BASE}</p>
+                        <p class="text-gray-500 mb-4">${t('quota.connectionUnable', { base: API_BASE })}</p>
                         <button onclick="retryFetchQuota(this)" 
                                 class="px-6 py-2 rounded-lg font-bold text-gray-300"
                                 style="background: var(--dark-purple);">
-                            Retry
+                            ${t('quota.retry')}
                         </button>
                     </div>
                 `;
@@ -1809,13 +2539,13 @@
         function retryFetchQuota(button) {
             if (button) {
                 button.disabled = true;
-                button.textContent = 'Connecting...';
+                button.textContent = t('quota.connecting');
                 button.style.opacity = '0.7';
                 button.style.cursor = 'wait';
             }
             const planInfo = document.getElementById('plan-info');
             if (planInfo) {
-                planInfo.innerHTML = `<span class="text-gray-400">Connecting...</span>`;
+                planInfo.innerHTML = `<span class="text-gray-400">${t('quota.connecting')}</span>`;
             }
             fetchQuota();
         }
@@ -1852,14 +2582,14 @@
 
                 // 显示复制成功提示
                 const toast = document.getElementById('copy-toast');
-                toast.textContent = `Copied: ${tunnelUrl}`;
+                toast.textContent = t('quota.copyTunnel', { value: tunnelUrl });
                 toast.classList.remove('opacity-0', 'translate-x-8');
 
                 setTimeout(() => {
                     toast.classList.add('opacity-0', 'translate-x-8');
                 }, 2000);
             } catch (error) {
-                alert(`Failed to copy: ${tunnelUrl}`);
+                alert(t('quota.copyFailed', { value: tunnelUrl }));
             }
         }
 
@@ -1944,7 +2674,7 @@
             const stored = loadCodexSession();
             if (!stored || !stored.sessionId) return;
             openAddAccountModal();
-            setAddAccountStatus('Resuming Codex authentication...');
+            setAddAccountStatus(t('quota.codexResuming'));
             if (stored.user_code || stored.verification_uri) {
                 showCodexDeviceFlow(stored);
             }
@@ -1952,7 +2682,7 @@
         }
 
         async function startProviderLogin(provider) {
-            setAddAccountStatus('Starting authentication...');
+            setAddAccountStatus(t('quota.authStarting'));
 
             try {
                 const payload = { provider };
@@ -1971,13 +2701,13 @@
                 const data = await response.json();
 
                 if (!data.success) {
-                    setAddAccountStatus(data.error || 'Authentication failed');
+                    setAddAccountStatus(data.error || t('quota.authFailed'));
                     return;
                 }
 
                 if (provider === 'copilot') {
                     if (data.status === 'success' && data.source === 'import') {
-                        setAddAccountStatus(`Imported Copilot: ${data.login || 'Copilot'}`);
+                        setAddAccountStatus(t('quota.importedCopilot', { name: data.login || 'Copilot' }));
                         closeAddAccountModal();
                         await checkAuthStatus();
                         refreshAll(true);
@@ -1995,23 +2725,26 @@
 
                 if (provider === 'codex' && data.source === 'import') {
                     if (data.count && data.count > 1) {
-                        setAddAccountStatus(`Imported ${data.count} Codex accounts`);
+                        setAddAccountStatus(t('quota.importedCodexMany', { count: data.count }));
                     } else {
                         const first = (data.accounts && data.accounts[0]) || {};
-                        setAddAccountStatus(`Imported Codex: ${first.email || first.id || 'Codex'}`);
+                        setAddAccountStatus(t('quota.importedCodexOne', { name: first.email || first.id || 'Codex' }));
                     }
                     closeAddAccountModal();
-                } else if (provider === 'zed') {
-                    setAddAccountStatus(`Connected: ${data.account?.label || data.account?.login || 'Zed'}`);
+                } else if (provider === 'zed' || provider === 'kiro') {
+                    const connectedLabel = provider === 'kiro' && data.count
+                        ? t('quota.importedKiroMany', { count: data.count })
+                        : t('quota.connected', { name: data.account?.label || data.account?.login || provider });
+                    setAddAccountStatus(connectedLabel);
                     closeAddAccountModal();
                 } else {
-                    setAddAccountStatus(`Connected: ${data.email || data.id || provider}`);
+                    setAddAccountStatus(t('quota.connected', { name: data.email || data.id || provider }));
                     closeAddAccountModal();
                 }
                 await checkAuthStatus();
                 refreshAll(true);
             } catch (error) {
-                setAddAccountStatus(`Authentication error: ${error.message}`);
+                setAddAccountStatus(t('quota.authError', { message: error.message }));
             }
         }
 
@@ -2025,7 +2758,7 @@
             if (data.verification_uri) {
                 window.open(data.verification_uri, '_blank');
             }
-            setAddAccountStatus('Waiting for GitHub Copilot authorization...');
+            setAddAccountStatus(t('quota.waitingCopilot'));
             pollCopilotStatus(data.device_code, data.interval || 5);
         }
 
@@ -2037,7 +2770,7 @@
             if (data.verification_uri) {
                 openCodexVerification(data.verification_uri);
             }
-            setAddAccountStatus('Waiting for Codex CLI authorization...');
+            setAddAccountStatus(t('quota.waitingCodex'));
             pollCodexStatus(data.session_id);
         }
 
@@ -2046,14 +2779,14 @@
             const status = await fetch(`${API_BASE}/auth/copilot/status?device_code=${deviceCode}`);
             const data = await status.json();
             if (data.status === 'success') {
-                setAddAccountStatus(`Connected: ${data.account?.login || 'Copilot'}`);
+                setAddAccountStatus(t('quota.connected', { name: data.account?.login || 'Copilot' }));
                 closeAddAccountModal();
                 await checkAuthStatus();
                 refreshAll(true);
                 return;
             }
             if (data.status === 'error') {
-                setAddAccountStatus(data.message || 'Copilot authentication failed');
+                setAddAccountStatus(data.message || t('quota.copilotAuthFailed'));
                 return;
             }
             setTimeout(() => pollCopilotStatus(deviceCode, intervalSeconds), intervalSeconds * 1000);
@@ -2062,7 +2795,7 @@
         function copyCopilotCode() {
             const code = document.getElementById('copilot-code').textContent;
             navigator.clipboard.writeText(code || '');
-            showToast(`Copied: ${code}`);
+            showToast(t('quota.copyTunnel', { value: code }));
         }
 
         async function pollCodexStatus(sessionId) {
@@ -2071,10 +2804,10 @@
             const data = await status.json();
             if (data.status === 'success') {
                 if (data.accounts && data.accounts.length > 1) {
-                    setAddAccountStatus(`Imported ${data.accounts.length} Codex accounts`);
+                    setAddAccountStatus(t('quota.importedCodexMany', { count: data.accounts.length }));
                 } else {
                     const first = (data.accounts && data.accounts[0]) || {};
-                    setAddAccountStatus(`Connected: ${first.email || first.id || 'Codex'}`);
+                    setAddAccountStatus(t('quota.connected', { name: first.email || first.id || 'Codex' }));
                 }
                 closeAddAccountModal();
                 await checkAuthStatus();
@@ -2083,7 +2816,7 @@
                 return;
             }
             if (data.status === 'error') {
-                setAddAccountStatus(data.message || 'Codex authentication failed');
+                setAddAccountStatus(data.message || t('quota.codexAuthFailed'));
                 clearCodexSession();
                 return;
             }
@@ -2098,7 +2831,7 @@
         function copyCodexCode() {
             const code = document.getElementById('codex-code').textContent;
             navigator.clipboard.writeText(code || '');
-            showToast(`Copied: ${code}`);
+            showToast(t('quota.copyTunnel', { value: code }));
         }
 
         function openCodexVerification(url) {
@@ -2119,11 +2852,11 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    alert('Logged out successfully');
+                    alert(t('quota.ideLoggedOut'));
                     await checkAuthStatus();
                 }
             } catch (error) {
-                alert(`Logout error: ${error.message}`);
+                alert(t('quota.authError', { message: error.message }));
             }
         }
 
@@ -2193,7 +2926,7 @@
             usageLoading = true;
 
             // Immediate feedback
-            if (showToast) showSettingsToast('Refreshing...');
+            if (showToast) showSettingsToast(t('status.refreshing'));
 
             // Show loading state
             const totalEl = document.getElementById('usage-total-large');
@@ -2202,21 +2935,21 @@
             const todayTokensEl = document.getElementById('usage-today-tokens');
             const totalTokensEl = document.getElementById('usage-total-tokens');
             if (todayTokensEl) todayTokensEl.classList.add('hidden');
-            if (totalTokensEl) totalTokensEl.textContent = '... tokens';
-            if (gridEl) gridEl.innerHTML = '<div class="text-gray-500 text-sm text-center py-4">Loading...</div>';
+            if (totalTokensEl) totalTokensEl.textContent = `... ${t('usage.tokens')}`;
+            if (gridEl) gridEl.innerHTML = `<div class="text-gray-500 text-sm text-center py-4">${t('usage.loading')}</div>`;
 
             try {
                 const res = await fetch(`${API_BASE}/usage`);
                 if (!res.ok) {
-                    if (showToast) showSettingsToast('Failed to load usage', true);
+                    if (showToast) showSettingsToast(t('usage.loadFailed'), true);
                     return;
                 }
                 const data = await res.json();
                 renderUsageData(data);
-                if (showToast) showSettingsToast('Usage refreshed');
+                if (showToast) showSettingsToast(t('usage.refreshed'));
             } catch (e) {
                 console.warn('Failed to fetch usage data:', e);
-                if (showToast) showSettingsToast('Failed to load usage', true);
+                if (showToast) showSettingsToast(t('usage.loadFailed'), true);
             } finally {
                 usageLoading = false;
             }
@@ -2235,12 +2968,12 @@
             const totalTokensEl = document.getElementById('usage-total-tokens');
 
             if (models.length === 0) {
-                grid.innerHTML = `<div class="text-gray-500 text-sm text-center py-4">No usage data yet</div>`;
+                grid.innerHTML = `<div class="text-gray-500 text-sm text-center py-4">${t('usage.noData')}</div>`;
                 document.getElementById('usage-total-large').textContent = '$0.00';
                 const todayCostEl = document.getElementById('usage-today-cost');
                 if (todayCostEl) todayCostEl.textContent = '$0.00';
                 if (todayTokensEl) todayTokensEl.classList.add('hidden');
-                if (totalTokensEl) totalTokensEl.textContent = '0 tokens';
+                if (totalTokensEl) totalTokensEl.textContent = `0 ${t('usage.tokens')}`;
                 return;
             }
 
@@ -2257,9 +2990,9 @@
                         <span class="w-3.5 h-3.5 rounded-sm flex-shrink-0" style="background: ${color}"></span>
                         <span class="text-sm font-semibold text-gray-200">${m.model}</span>
                         <span class="text-gray-600">›</span>
-                        <span style="font-size: 12px;" class="text-gray-400">In: ${inputDisplay}</span>
+                        <span style="font-size: 12px;" class="text-gray-400">${t('usage.in')}: ${inputDisplay}</span>
                         <span style="font-size: 12px;" class="text-cyan-400 font-medium">$${m.inputCost.toFixed(2)}</span>
-                        <span style="font-size: 12px;" class="text-gray-400 ml-2">Out: ${outputDisplay}</span>
+                        <span style="font-size: 12px;" class="text-gray-400 ml-2">${t('usage.out')}: ${outputDisplay}</span>
                         <span style="font-size: 12px;" class="text-cyan-400 font-medium">$${m.outputCost.toFixed(2)}</span>
                         <span style="font-size: 13px;" class="text-cyan-400 ml-auto font-bold">$${m.cost.toFixed(2)}</span>
                     </div>
@@ -2282,7 +3015,7 @@
             if (todayTokensEl) {
                 const totalTokens = (todayEntry.input || 0) + (todayEntry.output || 0);
                 if (totalTokens > 0) {
-                    todayTokensEl.textContent = `${formatTokenCount(totalTokens)} tokens`;
+                    todayTokensEl.textContent = `${formatTokenCount(totalTokens)} ${t('usage.tokens')}`;
                     todayTokensEl.classList.remove('hidden');
                 } else {
                     todayTokensEl.classList.add('hidden');
@@ -2295,7 +3028,7 @@
                     return acc;
                 }, { input: 0, output: 0 });
                 const totalTokens = totals.input + totals.output;
-                totalTokensEl.textContent = `${formatTokenCount(totalTokens)} tokens`;
+                totalTokensEl.textContent = `${formatTokenCount(totalTokens)} ${t('usage.tokens')}`;
             }
 
             // Render charts
@@ -2346,7 +3079,7 @@
             dailyChartInstance = new Chart(dailyCtx, {
                 type: 'bar',
                 data: {
-                    labels: labels.length > 0 ? labels : ['No data'],
+                    labels: labels.length > 0 ? labels : [t('usage.noData')],
                     datasets: [{
                         data: values.length > 0 ? values : [0],
                         backgroundColor: 'rgba(110, 231, 255, 0.6)',
@@ -2404,7 +3137,7 @@
             modelChartInstance = new Chart(modelCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: pieLabels.length > 0 ? pieLabels : ['No data'],
+                    labels: pieLabels.length > 0 ? pieLabels : [t('usage.noData')],
                     datasets: [{
                         data: pieValues.length > 0 ? pieValues : [1],
                         backgroundColor: pieColors.length > 0 ? pieColors : ['#374151'],
@@ -2432,13 +3165,13 @@
         }
 
         async function resetUsageData() {
-            if (!confirm('Clear all usage data?')) return;
+            if (!confirm(t('common.clear') + '?')) return;
             try {
                 await fetch(`${API_BASE}/usage/reset`, { method: 'POST' });
                 await fetchUsageData(false);
-                showSettingsToast('Usage data cleared');
+                showSettingsToast(t('quota.usageCleared'));
             } catch (e) {
-                showSettingsToast('Failed to reset usage', true);
+                showSettingsToast(t('quota.resetUsageFailed'), true);
             }
         }
     </script>

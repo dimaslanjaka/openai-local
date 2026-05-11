@@ -11,6 +11,9 @@ import { debugCodexOAuth, importCodexAuthSources, startCodexCliLogin, getCodexCl
 import { startCopilotDeviceFlow, pollCopilotSession, importCopilotAuthFiles } from "~/services/copilot/oauth"
 import { getIdeAuthStatus, logoutIdeSession } from "~/services/antigravity/ide-switch"
 import { importZedLocalAccount } from "~/services/zed/oauth"
+import { importKiroAuthSources } from "~/services/kiro/oauth"
+import { runAccountDiagnostics } from "~/services/auth/diagnostics"
+import { isLoopbackHost } from "~/lib/local-request"
 
 export const authRouter = new Hono()
 
@@ -32,6 +35,7 @@ authRouter.get("/accounts", (c) => {
             codex: authStore.listSummaries("codex"),
             copilot: authStore.listSummaries("copilot"),
             zed: authStore.listSummaries("zed"),
+            kiro: authStore.listSummaries("kiro"),
         },
     })
 })
@@ -50,7 +54,19 @@ authRouter.post("/import", (c) => {
 authRouter.post("/login", async (c) => {
     try {
         // 尝试解析 body，如果为空则触发 OAuth
-        let body: { accessToken?: string; refreshToken?: string; email?: string; name?: string; provider?: string; force?: boolean } = {}
+        let body: {
+            accessToken?: string
+            refreshToken?: string
+            email?: string
+            name?: string
+            provider?: string
+            force?: boolean
+            path?: string
+            paths?: string[]
+            profileArn?: string
+            region?: string
+            apiRegion?: string
+        } = {}
         try {
             const text = await c.req.text()
             if (text && text.trim()) {
@@ -148,6 +164,43 @@ authRouter.post("/login", async (c) => {
             })
         }
 
+        if (provider === "kiro") {
+            const result = await importKiroAuthSources({
+                paths: [
+                    ...(Array.isArray(body.paths) ? body.paths : []),
+                    ...(body.path ? [body.path] : []),
+                ],
+                refreshToken: body.refreshToken,
+                profileArn: body.profileArn,
+                region: body.region,
+                apiRegion: body.apiRegion,
+            })
+            if (result.accounts.length === 0) {
+                return c.json({
+                    success: false,
+                    error: "Kiro credentials not found. Sign in with Kiro IDE or run kiro-cli login, then retry.",
+                }, 400)
+            }
+            return c.json({
+                success: true,
+                provider: "kiro",
+                status: "success",
+                source: "import",
+                count: result.accounts.length,
+                sources: result.sources,
+                accounts: result.accounts.map(account => ({
+                    id: account.id,
+                    label: account.label,
+                    source: account.authSource,
+                })),
+                account: {
+                    id: result.accounts[0].id,
+                    label: result.accounts[0].label,
+                    source: result.accounts[0].authSource,
+                },
+            })
+        }
+
         // 默认 Antigravity
         if (!body.accessToken) {
             const result = await startOAuthLogin()
@@ -238,6 +291,18 @@ authRouter.get("/codex/debug", async (c) => {
     try {
         const result = await debugCodexOAuth()
         return c.json({ success: true, ...result })
+    } catch (error) {
+        return c.json({ success: false, error: (error as Error).message }, 500)
+    }
+})
+
+authRouter.get("/diagnostics", async (c) => {
+    if (!isLoopbackHost(c.req.header("host"))) {
+        return c.json({ success: false, error: "Diagnostics is only available from localhost." }, 403)
+    }
+    try {
+        const report = await runAccountDiagnostics()
+        return c.json({ success: true, ...report })
     } catch (error) {
         return c.json({ success: false, error: (error as Error).message }, 500)
     }

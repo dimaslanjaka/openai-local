@@ -5,6 +5,7 @@ import { accountManager } from "~/services/antigravity/account-manager"
 import { createCodexCompletion, isCodexModelSupportedForAccount, isCodexUnsupportedModelError } from "~/services/codex/chat"
 import { createCopilotCompletion } from "~/services/copilot/chat"
 import { createZedCompletion } from "~/services/zed/chat"
+import { createKiroCompletion } from "~/services/kiro/chat"
 import { authStore } from "~/services/auth/store"
 import type { ProviderAccount } from "~/services/auth/types"
 import { loadRoutingConfig, type RoutingEntry, type RoutingConfig, type AccountRoutingEntry } from "./config"
@@ -54,6 +55,7 @@ function normalizeOfficialModelId(model: string): string {
     const normalized = model?.trim()
     if (!normalized) return model
     const map: Record<string, string> = {
+        "claude-opus-4-7": "claude-opus-4.7",
         "claude-opus-4-6": "claude-opus-4-6-thinking",
         "claude-opus-4.6": "claude-opus-4-6-thinking",
         "claude-sonnet-4.5": "claude-sonnet-4-5",
@@ -73,7 +75,7 @@ function isEntryUsable(entry: RoutingEntry): boolean {
 
 // 🆕 Router 级别的 rate-limit 状态（独立于 accountManager）
 const routerRateLimits = new Map<string, number>()  // "provider:accountId" -> expiry timestamp
-const PROVIDER_ORDER: AuthProvider[] = ["antigravity", "codex", "copilot", "zed"]
+const PROVIDER_ORDER: AuthProvider[] = ["antigravity", "codex", "copilot", "zed", "kiro"]
 const flowStickyStates = new Map<string, FlowStickyState>()
 const accountStickyStates = new Map<string, AccountStickyState>()
 
@@ -491,6 +493,9 @@ async function createHostedProviderCompletion(
     }
     if (provider === "zed") {
         return createZedCompletion(account, model, request.messages, request.tools, request.maxTokens, request.reasoningEffort)
+    }
+    if (provider === "kiro") {
+        return createKiroCompletion(account, model, request.messages, request.tools, request.maxTokens)
     }
     throw new Error("Unsupported provider")
 }

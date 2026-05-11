@@ -7,6 +7,7 @@ import { fetchAntigravityModels } from "~/services/antigravity/quota-fetch"
 import { createCodexCompletion } from "~/services/codex/chat"
 import { createCopilotCompletion } from "~/services/copilot/chat"
 import { createZedCompletion } from "~/services/zed/chat"
+import { createKiroCompletion } from "~/services/kiro/chat"
 import { getProviderModels } from "~/services/routing/models"
 import { loadRoutingConfig } from "~/services/routing/config"
 import { UpstreamError } from "~/lib/error"
@@ -79,6 +80,11 @@ export async function pingAccount(
 
             if (provider === "zed") {
                 await createZedCompletion(account!, targetModel, PING_MESSAGES, undefined, 8)
+                return { modelId: targetModel, latencyMs: Date.now() - start }
+            }
+
+            if (provider === "kiro") {
+                await createKiroCompletion(account!, targetModel, PING_MESSAGES, undefined, 8)
                 return { modelId: targetModel, latencyMs: Date.now() - start }
             }
         } catch (error) {

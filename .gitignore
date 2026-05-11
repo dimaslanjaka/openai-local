@@ -11,3 +11,4 @@ anti-api-v*.zip
 anti-api-v*/
 anti-api-test-bundle/
 packaging/winget/manifests/
+kiro-gateway/

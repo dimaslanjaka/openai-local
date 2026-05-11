@@ -19,13 +19,24 @@
 
 > **Disclaimer**: This project is based on reverse engineering of Antigravity. Future compatibility is not guaranteed. For long-term use, avoid updating Antigravity.
 
-## What's New (v2.9.0)
+## What's New (v3.0.0)
+
+- **Kiro provider support** - Added Kiro account import, quota visibility, model routing, and reverse-proxy support alongside existing providers
+- **Dashboard i18n** - Added global Chinese support, system-language default detection, and a Settings language switch
+- **Account diagnostics assistant** - Added a localhost-only diagnostics panel for checking missing account files, CLI tools, callback ports, and provider setup
+- **Panel updates** - Added a localhost-only update checker and source-install updater, with package-manager safeguards for Homebrew, WinGet, and Docker
+- **Docker support hardened** - Updated Docker defaults, OAuth port ranges, health checks, development compose separation, and Docker-specific update guidance
+
+<details>
+<summary>v2.9.0</summary>
 
 - **Stable Homebrew package** - Homebrew now installs a prebuilt macOS Apple Silicon bundle, so `brew install anti-api` no longer depends on local Rust, LLVM, or Bun downloads
 - **WinGet distribution pipeline** - Added Windows portable packaging, WinGet manifest generation, and release workflow for `winget install anti-api`
 - **Unified launcher behavior** - Homebrew and WinGet installs now share the same contract: `anti-api` starts the service directly in any terminal
 - **Portable runtime support** - Added a Windows portable entrypoint that starts the Rust proxy, serves the bundled dashboard files, and avoids package-manager self-update conflicts
 - **Package-manager safeguards** - Homebrew/WinGet installs now redirect updates to `brew upgrade anti-api` and `winget upgrade anti-api` instead of self-overwriting
+
+</details>
 
 <details>
 <summary>v2.8.0</summary>
@@ -72,7 +83,7 @@
 ## Features
 
 - **Flow + Account Routing** - Custom flows for non-official models, account chains for official models
-- **Four Providers** - Antigravity, Codex, GitHub Copilot, and Zed hosted models
+- **Five Providers** - Antigravity, Codex, GitHub Copilot, Zed hosted models, and Kiro
 - **Remote Access** - ngrok/cloudflared/localtunnel with one-click setup
 - **Full Dashboard** - Quota monitoring, routing config, settings panel
 - **Auto-Rotation** - Account switching on 429 errors
@@ -161,10 +172,13 @@ Run:
 ```bash
 docker run --rm -it \\
   -p 8964:8964 \\
-  -p 51121:51121 \\
+  -p 1455-1465:1455-1465 \\
+  -p 51121-51131:51121-51131 \\
   -e ANTI_API_DATA_DIR=/app/data \\
   -e ANTI_API_NO_OPEN=1 \\
   -e ANTI_API_OAUTH_NO_OPEN=1 \\
+  -e ANTI_API_PACKAGE_MANAGER=docker \\
+  -e ANTI_API_NO_SELF_UPDATE=1 \\
   -v $HOME/.anti-api:/app/data \\
   anti-api
 ```
@@ -178,19 +192,21 @@ docker compose up --build
 Developer override (no rebuild, use local `src/` and `public/`):
 
 ```bash
-docker compose up -d --no-build
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-build
 ```
 
 Notes:
-- OAuth callback uses port `51121`. Make sure it is mapped.
+- OAuth callbacks use ports `51121-51131` for Antigravity and `1455-1465` for Codex browser OAuth. Make sure they are mapped.
 - If running on a remote host, set `ANTI_API_OAUTH_REDIRECT_URL` to a public URL like `http://YOUR_HOST:51121/oauth-callback`.
 - The bind mount reuses your local `~/.anti-api` data so Docker shares the same accounts and routing config.
+- Local-import providers cannot see host credentials unless you mount them into `/app/data` (see commented examples in `docker-compose.yml` for `.codex`, `.cli-proxy-api`, `.aws`, Kiro CLI, and Amazon Q).
 - Set `ANTI_API_NO_OPEN=1` to avoid trying to open the browser inside a container.
+- In-panel self-update is disabled in Docker. Rebuild or pull the image with `docker compose up -d --build`.
 - If Copilot TLS fails in restricted networks, set `ANTI_API_COPILOT_INSECURE_TLS=1` (not recommended for general use).
 - If Codex TLS fails in restricted networks, set `ANTI_API_CODEX_INSECURE_TLS=1` (not recommended for general use).
 - Set Codex default reasoning effort with `ANTI_API_CODEX_REASONING_EFFORT=low|medium|high` (default: `medium`).
-- If Docker Hub is unstable, the default base image uses GHCR. You can override with `BUN_IMAGE=oven/bun:1.1.38`.
- - ngrok will auto-download inside the container if missing (Linux only).
+- If Docker Hub is unstable, the default base image uses GHCR. You can override with `BUN_IMAGE=oven/bun:1.3.5`.
+- ngrok is installed in the image for Linux amd64/arm64.
 
 ## Development
 
@@ -416,13 +432,24 @@ MIT
 
 > **免责声明**：本项目基于 Antigravity 逆向开发，未来版本兼容性未知，长久使用请尽可能避免更新Antigravity。
 
-## 更新内容 (v2.9.0)
+## 更新内容 (v3.0.0)
+
+- **新增 Kiro Provider 支持** - 加入 Kiro 账号导入、配额展示、模型路由和反向代理能力
+- **控制面板国际化** - 增加全局中文支持、默认跟随系统语言，并在设置页提供语言切换
+- **账号诊断助手** - 新增仅限本机访问的诊断面板，用于检查账号文件、CLI 工具、回调端口和 provider 配置
+- **面板更新能力** - 新增仅限本机访问的检查更新和源码安装一键更新，并对 Homebrew、WinGet、Docker 做保护提示
+- **完善 Docker 支持** - 更新 Docker 默认配置、OAuth 端口范围、健康检查、开发 compose 分离和 Docker 更新说明
+
+<details>
+<summary>v2.9.0</summary>
 
 - **稳定的 Homebrew 安装包** - Homebrew 现在直接安装预编译的 macOS Apple Silicon 包，`brew install anti-api` 不再依赖本地下载 Rust、LLVM 或 Bun
 - **新增 WinGet 发布链路** - 补齐了 Windows portable 打包、WinGet manifest 生成和 release workflow，为 `winget install anti-api` 做准备
 - **统一安装后启动行为** - Homebrew 和 WinGet 安装后的行为统一为：在任意终端输入 `anti-api` 直接启动服务
 - **新增便携运行时支持** - Windows portable 入口会自动拉起 Rust proxy，加载打包后的 dashboard 静态文件，并规避包管理器安装下的自更新冲突
 - **增强包管理器保护** - Homebrew / WinGet 安装不再自覆盖更新，而是分别提示使用 `brew upgrade anti-api` 和 `winget upgrade anti-api`
+
+</details>
 
 <details>
 <summary>v2.8.0</summary>
@@ -438,7 +465,7 @@ MIT
 ## 特性
 
 - **Flow + Account 路由** - 自定义流控制非官方模型，官方模型使用账号链
-- **四家 Provider** - Antigravity、Codex、GitHub Copilot、Zed 托管模型
+- **五家 Provider** - Antigravity、Codex、GitHub Copilot、Zed 托管模型、Kiro
 - **远程访问** - ngrok/cloudflared/localtunnel 一键设置
 - **完整面板** - 配额监控、路由配置、设置面板
 - **自动轮换** - 429 错误时切换账号
@@ -517,10 +544,13 @@ docker build -t anti-api .
 ```bash
 docker run --rm -it \\
   -p 8964:8964 \\
-  -p 51121:51121 \\
+  -p 1455-1465:1455-1465 \\
+  -p 51121-51131:51121-51131 \\
   -e ANTI_API_DATA_DIR=/app/data \\
   -e ANTI_API_NO_OPEN=1 \\
   -e ANTI_API_OAUTH_NO_OPEN=1 \\
+  -e ANTI_API_PACKAGE_MANAGER=docker \\
+  -e ANTI_API_NO_SELF_UPDATE=1 \\
   -v $HOME/.anti-api:/app/data \\
   anti-api
 ```
@@ -534,19 +564,21 @@ docker compose up --build
 开发覆盖模式（不重建，直接使用本地 `src/` 与 `public/`）：
 
 ```bash
-docker compose up -d --no-build
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-build
 ```
 
 说明：
-- OAuth 回调使用端口 `51121`，请确保已映射该端口。
+- OAuth 回调使用 `51121-51131`（Antigravity）和 `1455-1465`（Codex 浏览器 OAuth），请确保已映射这些端口。
 - 如果运行在远程主机，请将 `ANTI_API_OAUTH_REDIRECT_URL` 设置为公网地址，例如 `http://YOUR_HOST:51121/oauth-callback`。
 - 挂载 `~/.anti-api` 后，Docker 会复用本地账号和路由配置。
+- 本地导入类 provider 默认看不到宿主机凭据；如需导入，请按 `docker-compose.yml` 里的注释示例挂载 `.codex`、`.cli-proxy-api`、`.aws`、Kiro CLI 或 Amazon Q 目录。
 - 设置 `ANTI_API_NO_OPEN=1` 可避免容器内尝试自动打开浏览器。
+- Docker 内禁用面板自更新，请使用 `docker compose up -d --build` 重建或拉取镜像更新。
 - 如果受限网络下 Copilot TLS 失败，可设置 `ANTI_API_COPILOT_INSECURE_TLS=1`（不建议常规使用）。
 - 如果受限网络下 Codex TLS 失败，可设置 `ANTI_API_CODEX_INSECURE_TLS=1`（不建议常规使用）。
 - 可通过 `ANTI_API_CODEX_REASONING_EFFORT=low|medium|high` 设置 Codex 默认推理强度（默认 `medium`）。
-- 如果 Docker Hub 不稳定，默认基础镜像已使用 GHCR；可用 `BUN_IMAGE=oven/bun:1.1.38` 覆盖。
-- 容器内缺少 ngrok 时会自动下载（仅 Linux）。
+- 如果 Docker Hub 不稳定，默认基础镜像已使用 GHCR；可用 `BUN_IMAGE=oven/bun:1.3.5` 覆盖。
+- 镜像内已为 Linux amd64/arm64 安装 ngrok。
 
 ## 开发规范
 

@@ -42,15 +42,32 @@ const COPILOT_STATIC_MODELS: ProviderModelOption[] = [
 ]
 
 const ZED_STATIC_MODELS: ProviderModelOption[] = []
+const KIRO_STATIC_MODELS: ProviderModelOption[] = [
+    { id: "auto", label: "Kiro - Auto" },
+    { id: "claude-opus-4.7", label: "Kiro - Claude Opus 4.7" },
+    { id: "claude-opus-4.6", label: "Kiro - Claude Opus 4.6" },
+    { id: "claude-opus-4.5", label: "Kiro - Claude Opus 4.5" },
+    { id: "claude-sonnet-4.6", label: "Kiro - Claude Sonnet 4.6" },
+    { id: "claude-sonnet-4.5", label: "Kiro - Claude Sonnet 4.5" },
+    { id: "claude-sonnet-4.0", label: "Kiro - Claude Sonnet 4.0" },
+    { id: "claude-haiku-4.5", label: "Kiro - Claude Haiku 4.5" },
+    { id: "glm-5", label: "Kiro - GLM-5" },
+    { id: "deepseek-3.2", label: "Kiro - DeepSeek 3.2" },
+    { id: "minimax-m2.5", label: "Kiro - MiniMax M2.5" },
+    { id: "minimax-m2.1", label: "Kiro - MiniMax M2.1" },
+    { id: "qwen3-coder-next", label: "Kiro - Qwen3 Coder Next" },
+]
 
 let dynamicCopilotModels: ProviderModelOption[] = []
 let dynamicCodexModels: ProviderModelOption[] = []
 let dynamicAntigravityModels: ProviderModelOption[] = []
 let dynamicZedModels: ProviderModelOption[] = []
+let dynamicKiroModels: ProviderModelOption[] = []
 const dynamicCopilotModelsByAccount = new Map<string, ProviderModelOption[]>()
 const dynamicCodexModelsByAccount = new Map<string, ProviderModelOption[]>()
 const dynamicAntigravityModelsByAccount = new Map<string, ProviderModelOption[]>()
 const dynamicZedModelsByAccount = new Map<string, ProviderModelOption[]>()
+const dynamicKiroModelsByAccount = new Map<string, ProviderModelOption[]>()
 
 function sanitizeModelOptions(models: ProviderModelOption[], prefix: string): ProviderModelOption[] {
     const deduped = new Map<string, ProviderModelOption>()
@@ -178,6 +195,29 @@ export function clearAllDynamicZedModelsByAccount(): void {
     dynamicZedModelsByAccount.clear()
 }
 
+export function setDynamicKiroModels(models: ProviderModelOption[]): void {
+    dynamicKiroModels = sanitizeModelOptions(models, "Kiro")
+}
+
+export function clearDynamicKiroModels(): void {
+    dynamicKiroModels = []
+    dynamicKiroModelsByAccount.clear()
+}
+
+export function setDynamicKiroModelsForAccount(accountId: string, models: ProviderModelOption[]): void {
+    const id = accountId?.trim()
+    if (!id) return
+    dynamicKiroModelsByAccount.set(id, sanitizeModelOptions(models, "Kiro"))
+}
+
+export function clearDynamicKiroModelsForAccount(accountId: string): void {
+    dynamicKiroModelsByAccount.delete(accountId)
+}
+
+export function clearAllDynamicKiroModelsByAccount(): void {
+    dynamicKiroModelsByAccount.clear()
+}
+
 export function getProviderModels(provider: AuthProvider): ProviderModelOption[] {
     if (provider === "antigravity") {
         const staticModels = AVAILABLE_MODELS.map(model => ({
@@ -218,6 +258,14 @@ export function getProviderModels(provider: AuthProvider): ProviderModelOption[]
         )
     }
 
+    if (provider === "kiro") {
+        return mergeModelOptions(
+            flattenDynamicModelsByAccount(dynamicKiroModelsByAccount),
+            dynamicKiroModels,
+            KIRO_STATIC_MODELS
+        )
+    }
+
     return []
 }
 
@@ -249,6 +297,13 @@ export function getProviderModelsForAccount(provider: AuthProvider, accountId: s
         const dynamic = dynamicZedModelsByAccount.get(accountId)
         if (dynamic && dynamic.length > 0) {
             return mergeModelOptions(dynamic, ZED_STATIC_MODELS)
+        }
+        return getProviderModels(provider)
+    }
+    if (provider === "kiro") {
+        const dynamic = dynamicKiroModelsByAccount.get(accountId)
+        if (dynamic && dynamic.length > 0) {
+            return mergeModelOptions(dynamic, KIRO_STATIC_MODELS)
         }
         return getProviderModels(provider)
     }

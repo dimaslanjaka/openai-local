@@ -10,10 +10,10 @@ Add multiple Google accounts to automatically rotate between them when one hits 
 
 ### 1. Add Additional Accounts
 
-Run the helper script to add more Google accounts:
+Run the built-in CLI command to add more Google accounts:
 
 ```bash
-bun run add-account.ts
+bun run src/main.ts add-account
 ```
 
 This will:
@@ -71,4 +71,4 @@ bun run src/main.ts start
 ### Account not working
 - Check if the account has Antigravity/Gemini enabled
 - Try logging into https://gemini.google.com with the account first
-- Re-run `bun run add-account.ts` to add the account again
+- Re-run `bun run src/main.ts add-account` to add the account again

@@ -49,6 +49,33 @@ test("authStore saves and lists accounts", async () => {
     restoreEnv(prevHome, prevProfile)
 })
 
+test("authStore saves and lists kiro accounts", async () => {
+    const { dir, prevHome, prevProfile } = withTempHome()
+    const { authStore } = await import(`../src/services/auth/store.ts?${Date.now()}`)
+
+    authStore.saveAccount({
+        id: "arn:aws:codewhisperer:us-east-1:123:profile/test",
+        provider: "kiro",
+        label: "Kiro Google",
+        accessToken: "token",
+        refreshToken: "refresh",
+        expiresAt: Date.now() + 60_000,
+        projectId: "arn:aws:codewhisperer:us-east-1:123:profile/test",
+        authSource: "kiro-local",
+    })
+
+    const accounts = authStore.listAccounts("kiro")
+    expect(accounts.length).toBe(1)
+    expect(accounts[0].label).toBe("Kiro Google")
+    expect(accounts[0].authSource).toBe("kiro-local")
+
+    const summaries = authStore.listSummaries("kiro")
+    expect(summaries[0].displayName).toBe("Kiro Google")
+
+    rmSync(dir, { recursive: true, force: true })
+    restoreEnv(prevHome, prevProfile)
+})
+
 test("authStore rate limit toggles state", async () => {
     const { dir, prevHome, prevProfile } = withTempHome()
     const { authStore } = await import(`../src/services/auth/store.ts?${Date.now()}`)

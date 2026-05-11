@@ -21,15 +21,17 @@ type AccountBar = {
     resetTime?: string
 }
 
+type QuotaProvider = "antigravity" | "codex" | "copilot" | "zed" | "kiro"
+
 export type AccountQuotaView = {
-    provider: "antigravity" | "codex" | "copilot" | "zed"
+    provider: QuotaProvider
     accountId: string
     displayName: string
     bars: AccountBar[]
 }
 
 type QuotaCacheEntry = {
-    provider: "antigravity" | "codex" | "copilot" | "zed"
+    provider: QuotaProvider
     accountId: string
     displayName: string
     bars: AccountBar[]
@@ -124,6 +126,10 @@ function defaultZedBars(): AccountBar[] {
     return [{ key: "hosted", label: "hosted", percentage: 0 }]
 }
 
+function defaultKiroBars(): AccountBar[] {
+    return [{ key: "access", label: "access", percentage: 100 }]
+}
+
 function buildCachedViews(provider: QuotaCacheEntry["provider"], accounts: ProviderAccount[]): AccountQuotaView[] {
     return accounts.map(account => {
         const displayName = account.email || account.login || account.id
@@ -135,7 +141,9 @@ function buildCachedViews(provider: QuotaCacheEntry["provider"], accounts: Provi
                     ? defaultCodexBars()
                     : provider === "copilot"
                         ? defaultCopilotBars()
-                        : defaultZedBars()
+                        : provider === "zed"
+                            ? defaultZedBars()
+                            : defaultKiroBars()
         )
         return {
             provider,
@@ -157,8 +165,9 @@ export async function getAggregatedQuota(): Promise<{
     const codexAccounts = authStore.listAccounts("codex")
     const copilotAccounts = authStore.listAccounts("copilot")
     const zedAccounts = authStore.listAccounts("zed")
+    const kiroAccounts = authStore.listAccounts("kiro")
 
-    const [antigravity, codex, copilot, zed] = await Promise.all([
+    const [antigravity, codex, copilot, zed, kiro] = await Promise.all([
         withTimeout(
             fetchAntigravityQuotas(antigravityAccounts),
             PROVIDER_FETCH_TIMEOUT_MS,
@@ -183,12 +192,18 @@ export async function getAggregatedQuota(): Promise<{
             () => buildCachedViews("zed", zedAccounts),
             "Zed",
         ),
+        withTimeout(
+            fetchKiroQuotas(kiroAccounts),
+            PROVIDER_FETCH_TIMEOUT_MS,
+            () => buildCachedViews("kiro", kiroAccounts),
+            "Kiro",
+        ),
     ])
     saveQuotaCache()
 
     return {
         timestamp: new Date().toISOString(),
-        accounts: [...antigravity, ...codex, ...copilot, ...zed],
+        accounts: [...antigravity, ...codex, ...copilot, ...zed, ...kiro],
     }
 }
 
@@ -533,6 +548,25 @@ async function fetchZedQuotas(accounts: ProviderAccount[]): Promise<AccountQuota
         }
     })
     return Promise.all(promises)
+}
+
+async function fetchKiroQuotas(accounts: ProviderAccount[]): Promise<AccountQuotaView[]> {
+    return accounts.map(account => {
+        const bars = defaultKiroBars()
+        updateQuotaCache({
+            provider: "kiro",
+            accountId: account.id,
+            displayName: account.label || account.login || account.id,
+            bars,
+            updatedAt: new Date().toISOString(),
+        })
+        return {
+            provider: "kiro" as const,
+            accountId: account.id,
+            displayName: account.label || account.login || account.id,
+            bars,
+        }
+    })
 }
 
 function buildZedHostedBar(data: Awaited<ReturnType<typeof fetchZedAccountOverview>>): AccountBar {

@@ -194,8 +194,8 @@
     <div class="max-w-7xl mx-auto main-container">
         <!-- Header -->
         <div class="mb-6 remote-header">
-            <h1 class="text-3xl font-bold text-gray-300">Remote</h1>
-            <p class="text-gray-500 text-sm font-bold mt-1">Expose anti-api to external devices via ngrok tunnel</p>
+            <h1 class="text-3xl font-bold text-gray-300" data-i18n="remote.title">Remote</h1>
+            <p class="text-gray-500 text-sm font-bold mt-1" data-i18n="remote.subtitle">Expose anti-api to external devices via ngrok tunnel</p>
         </div>
 
         <!-- ngrok Card - Simplified -->
@@ -204,11 +204,12 @@
                 <!-- Token Input Row -->
                 <div class="flex items-center gap-3 mb-6">
                     <input type="text" id="ngrok-authtoken" placeholder="Enter ngrok authtoken"
+                        data-i18n-placeholder="remote.tokenPlaceholder"
                         class="flex-1 px-4 py-2.5 rounded-lg text-white text-sm"
                         style="background: rgba(255,255,255,0.08); border: 1px solid rgba(55, 65, 81, 0.5);">
                     <a href="https://dashboard.ngrok.com/get-started/your-authtoken" target="_blank"
                         class="text-cyan-400 text-sm font-medium hover:text-cyan-300 whitespace-nowrap">
-                        Get Token →
+                        <span data-i18n="remote.getToken">Get Token</span> →
                     </a>
                 </div>
 
@@ -217,15 +218,15 @@
                     <div class="refresh-btn">
                         <button id="ngrok-toggle" onclick="toggleTunnel()"
                             class="px-6 py-2.5 rounded-lg font-bold text-gray-200 text-sm min-w-[100px]">
-                            Start
+                            <span data-i18n="remote.start">Start</span>
                         </button>
                     </div>
-                    <span id="ngrok-status-text" class="text-sm text-gray-500">Not connected</span>
+                    <span id="ngrok-status-text" class="text-sm text-gray-500" data-i18n="remote.notConnected">Not connected</span>
                 </div>
 
                 <!-- URL Display - Large and Clickable -->
                 <div id="ngrok-url-container" class="hidden">
-                    <div class="text-xs text-gray-500 mb-2">Click to copy URL:</div>
+                    <div class="text-xs text-gray-500 mb-2" data-i18n="remote.clickToCopy">Click to copy URL:</div>
                     <div id="ngrok-url" onclick="copyNgrokUrl()"
                         class="p-4 rounded-xl text-lg font-mono text-cyan-400 cursor-pointer hover:bg-gray-800/50 transition-colors truncate"
                         style="background: rgba(0,0,0,0.3); border: 1px solid rgba(34, 211, 238, 0.3);">
@@ -240,6 +241,75 @@
 
     <script>
         const API_BASE = 'http://localhost:8964';
+        const LANGUAGE_STORAGE_KEY = 'anti-api-language';
+        function detectPreferredLanguage() {
+            const candidates = [];
+            if (Array.isArray(navigator.languages)) candidates.push(...navigator.languages);
+            if (navigator.language) candidates.push(navigator.language);
+            try {
+                const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+                if (intlLocale) candidates.push(intlLocale);
+            } catch { }
+            return candidates.join(' ').toLowerCase().includes('zh') ? 'zh-CN' : 'en';
+        }
+        let currentLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) || detectPreferredLanguage();
+        const I18N = {
+            en: {
+                'remote.title': 'Remote',
+                'remote.subtitle': 'Expose anti-api to external devices via ngrok tunnel',
+                'remote.tokenPlaceholder': 'Enter ngrok authtoken',
+                'remote.getToken': 'Get Token',
+                'remote.start': 'Start',
+                'remote.stop': 'Stop',
+                'remote.notConnected': 'Not connected',
+                'remote.starting': 'Starting...',
+                'remote.connected': 'Connected',
+                'remote.started': 'ngrok started successfully',
+                'remote.startingWait': 'Starting, waiting for URL...',
+                'remote.failedToStart': 'Failed to start',
+                'remote.stopped': 'ngrok stopped',
+                'remote.noUrl': 'No URL to copy',
+                'remote.copied': 'URL copied to clipboard',
+                'remote.copyFailed': 'Copy failed',
+                'remote.clickToCopy': 'Click to copy URL:',
+            },
+            'zh-CN': {
+                'remote.title': '远程',
+                'remote.subtitle': '通过 ngrok 隧道把 anti-api 暴露给外部设备',
+                'remote.tokenPlaceholder': '输入 ngrok authtoken',
+                'remote.getToken': '获取 Token',
+                'remote.start': '启动',
+                'remote.stop': '停止',
+                'remote.notConnected': '未连接',
+                'remote.starting': '启动中...',
+                'remote.connected': '已连接',
+                'remote.started': 'ngrok 已成功启动',
+                'remote.startingWait': '启动中，正在等待 URL...',
+                'remote.failedToStart': '启动失败',
+                'remote.stopped': 'ngrok 已停止',
+                'remote.noUrl': '没有可复制的 URL',
+                'remote.copied': 'URL 已复制到剪贴板',
+                'remote.copyFailed': '复制失败',
+                'remote.clickToCopy': '点击复制 URL：',
+            }
+        };
+
+        function t(key) {
+            return I18N[currentLanguage]?.[key] || I18N.en[key] || key;
+        }
+
+        function applyLanguage(language = currentLanguage) {
+            currentLanguage = I18N[language] ? language : 'en';
+            document.documentElement.lang = currentLanguage === 'zh-CN' ? 'zh-CN' : 'en';
+            localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLanguage);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.textContent = t(el.dataset.i18n);
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder));
+            });
+        }
+
         let ngrokUrl = null;
         let isRunning = false;
 
@@ -270,7 +340,7 @@
             const card = document.querySelector('.card-3d[data-type="ngrok"]');
 
             toggleBtn.disabled = true;
-            statusText.textContent = 'Starting...';
+            statusText.textContent = t('remote.starting');
 
             try {
                 const authtoken = document.getElementById('ngrok-authtoken').value.trim();
@@ -287,23 +357,23 @@
                 if (data.active && data.url) {
                     ngrokUrl = data.url;
                     isRunning = true;
-                    toggleBtn.textContent = 'Stop';
+                    toggleBtn.textContent = t('remote.stop');
                     toggleBtn.disabled = false;
-                    statusText.textContent = 'Connected';
+                    statusText.textContent = t('remote.connected');
                     card.classList.add('active');
 
                     // Show URL
                     document.getElementById('ngrok-url').textContent = data.url;
                     document.getElementById('ngrok-url-container').classList.remove('hidden');
 
-                    showToast('ngrok started successfully');
+                    showToast(t('remote.started'));
                 } else if (data.active && !data.url) {
-                    statusText.textContent = 'Starting, waiting for URL...';
+                    statusText.textContent = t('remote.startingWait');
                     setTimeout(() => refreshStatus(), 2000);
                 } else {
-                    statusText.textContent = data.error || 'Failed to start';
+                    statusText.textContent = data.error || t('remote.failedToStart');
                     toggleBtn.disabled = false;
-                    showToast(data.error || 'Failed to start', true);
+                    showToast(data.error || t('remote.failedToStart'), true);
                 }
             } catch (error) {
                 statusText.textContent = error.message;
@@ -322,14 +392,14 @@
 
                 ngrokUrl = null;
                 isRunning = false;
-                toggleBtn.textContent = 'Start';
-                statusText.textContent = 'Not connected';
+                toggleBtn.textContent = t('remote.start');
+                statusText.textContent = t('remote.notConnected');
                 card.classList.remove('active');
 
                 // Hide URL
                 document.getElementById('ngrok-url-container').classList.add('hidden');
 
-                showToast('ngrok stopped');
+                showToast(t('remote.stopped'));
             } catch (error) {
                 showToast(error.message, true);
             }
@@ -337,14 +407,14 @@
 
         async function copyNgrokUrl() {
             if (!ngrokUrl) {
-                showToast('No URL to copy', true);
+                showToast(t('remote.noUrl'), true);
                 return;
             }
             try {
                 await navigator.clipboard.writeText(ngrokUrl);
-                showToast('URL copied to clipboard');
+                showToast(t('remote.copied'));
             } catch (error) {
-                showToast('Copy failed', true);
+                showToast(t('remote.copyFailed'), true);
             }
         }
 
@@ -363,22 +433,22 @@
                 if (status.active && status.url) {
                     ngrokUrl = status.url;
                     isRunning = true;
-                    toggleBtn.textContent = 'Stop';
+                    toggleBtn.textContent = t('remote.stop');
                     toggleBtn.disabled = false;
-                    statusText.textContent = 'Connected';
+                    statusText.textContent = t('remote.connected');
                     card.classList.add('active');
 
                     document.getElementById('ngrok-url').textContent = status.url;
                     document.getElementById('ngrok-url-container').classList.remove('hidden');
                 } else if (status.active && !status.url) {
-                    statusText.textContent = 'Starting, waiting for URL...';
+                    statusText.textContent = t('remote.startingWait');
                     toggleBtn.disabled = true;
                 } else {
                     ngrokUrl = null;
                     isRunning = false;
-                    toggleBtn.textContent = 'Start';
+                    toggleBtn.textContent = t('remote.start');
                     toggleBtn.disabled = false;
-                    statusText.textContent = 'Not connected';
+                    statusText.textContent = t('remote.notConnected');
                     card.classList.remove('active');
 
                     document.getElementById('ngrok-url-container').classList.add('hidden');
@@ -426,6 +496,7 @@
             });
         }
 
+        applyLanguage();
         loadConfig();
         refreshStatus();
         setInterval(refreshStatus, 5000);

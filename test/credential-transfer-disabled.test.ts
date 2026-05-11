@@ -70,3 +70,27 @@ test("auth status endpoint is still available", async () => {
     const body = await res.json()
     expect(typeof body.authenticated).toBe("boolean")
 })
+
+test("diagnostics endpoint rejects non-local hosts", async () => {
+    const server = await serverPromise
+    const res = await server.request("/auth/diagnostics", {
+        headers: { host: "example.com" },
+    })
+    expect(res.status).toBe(403)
+    expect(await res.json()).toEqual({
+        success: false,
+        error: "Diagnostics is only available from localhost.",
+    })
+})
+
+test("updates endpoint rejects non-local hosts", async () => {
+    const server = await serverPromise
+    const res = await server.request("/updates/check", {
+        headers: { host: "example.com" },
+    })
+    expect(res.status).toBe(403)
+    expect(await res.json()).toEqual({
+        success: false,
+        error: "Updates are only available from localhost.",
+    })
+})

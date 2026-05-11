@@ -1,4 +1,4 @@
-ARG BUN_IMAGE=ghcr.io/oven-sh/bun:1.1.38
+ARG BUN_IMAGE=ghcr.io/oven-sh/bun:1.3.5
 FROM ${BUN_IMAGE}
 
 WORKDIR /app
@@ -23,9 +23,17 @@ RUN set -eux; \
 
 ENV NODE_ENV=production
 ENV HOME=/app/data
+ENV ANTI_API_DATA_DIR=/app/data
+ENV ANTI_API_NO_OPEN=1
+ENV ANTI_API_OAUTH_NO_OPEN=1
+ENV ANTI_API_PACKAGE_MANAGER=docker
+ENV ANTI_API_NO_SELF_UPDATE=1
 
 RUN mkdir -p /app/data
 
-EXPOSE 8964 51121
+EXPOSE 8964 1455-1465 51121-51131
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -fsS http://127.0.0.1:8964/auth/status >/dev/null || exit 1
 
 CMD ["bun", "run", "src/main.ts", "start"]

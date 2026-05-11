@@ -442,30 +442,30 @@
     <div class="max-w-7xl mx-auto space-y-6 main-container">
         <header class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-200">Routing</h1>
-                <p class="text-sm text-gray-500 mt-1 font-bold">Build model chains with fallback on 429</p>
+                <h1 class="text-3xl font-bold text-gray-200" data-i18n="routing.title">Routing</h1>
+                <p class="text-sm text-gray-500 mt-1 font-bold" data-i18n="routing.subtitle">Build model chains with fallback on 429</p>
             </div>
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 text-xs">
                     <button id="tab-flow" onclick="setRoutingTab('flow')"
                         class="action-btn px-3 py-2 rounded-lg font-bold text-gray-300">
-                        Flow Routing
+                        <span data-i18n="routing.flowRouting">Flow Routing</span>
                     </button>
                     <button id="tab-account" onclick="setRoutingTab('account')"
                         class="action-btn px-3 py-2 rounded-lg font-bold text-gray-400">
-                        Account Routing
+                        <span data-i18n="routing.accountRouting">Account Routing</span>
                     </button>
                 </div>
                 <div class="refresh-btn inline-block" id="refresh-container">
                     <button onclick="refreshRouting(true)" id="refresh-btn"
                         class="px-4 py-2 rounded-lg font-bold text-gray-300 text-sm">
-                        Refresh
+                        <span data-i18n="common.refresh">Refresh</span>
                     </button>
                 </div>
                 <div class="action-wrap inline-block">
                     <button onclick="window.location.href='/quota'" id="back-btn"
                         class="action-btn px-4 py-2 rounded-lg font-bold text-gray-300 text-sm">
-                        Back to Quota
+                        <span data-i18n="routing.backToQuota">Back to Quota</span>
                     </button>
                 </div>
             </div>
@@ -475,8 +475,8 @@
             <!-- Accounts Panel -->
             <aside class="panel rounded-2xl p-4 flex flex-col min-h-0">
                 <div class="mb-3 flex-shrink-0">
-                    <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500">Accounts</h2>
-                    <p class="text-xs text-gray-600 mt-1">Drag a model block into the flow.</p>
+                    <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500" data-i18n="routing.accounts">Accounts</h2>
+                    <p class="text-xs text-gray-600 mt-1" data-i18n="routing.accountsDesc">Drag a model block into the flow.</p>
                 </div>
                 <div id="account-list" class="space-y-4 flex-1 min-h-0 overflow-y-auto panel-scroll"></div>
             </aside>
@@ -487,23 +487,23 @@
                     <!-- Flow Header -->
                     <div class="flex items-start justify-between gap-3 mb-4 flex-shrink-0">
                         <div>
-                            <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500">Flow</h2>
-                            <p class="text-xs text-gray-600 mt-1">Match by model name in requests.</p>
+                            <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500" data-i18n="routing.flow">Flow</h2>
+                            <p class="text-xs text-gray-600 mt-1" data-i18n="routing.flowDesc">Match by model name in requests.</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <input id="flow-name" placeholder="Model ID"
+                            <input id="flow-name" placeholder="Model ID" data-i18n-placeholder="routing.modelId"
                                 class="bg-transparent border border-gray-700 rounded-lg px-2 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyan-300 w-24 text-center"
                                 autocomplete="off" />
                             <div class="action-wrap inline-block">
                                 <button onclick="newFlow()" id="new-btn"
                                     class="action-btn px-3 py-2 rounded-lg font-bold text-gray-300 text-xs">
-                                    New
+                                    <span data-i18n="common.new">New</span>
                                 </button>
                             </div>
                             <div class="action-wrap inline-block">
                                 <button onclick="saveRouting()" id="save-btn"
                                     class="action-btn px-3 py-2 rounded-lg font-bold text-gray-300 text-xs">
-                                    Save
+                                    <span data-i18n="common.save">Save</span>
                                 </button>
                             </div>
                         </div>
@@ -519,8 +519,8 @@
             <!-- Saved Panel -->
             <aside class="panel rounded-2xl p-4 flex flex-col min-h-0">
                 <div class="mb-3 flex-shrink-0">
-                    <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500">Saved</h2>
-                    <p class="text-xs text-gray-600 mt-1">Edit, rename, or delete saved flows.</p>
+                    <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500" data-i18n="routing.saved">Saved</h2>
+                    <p class="text-xs text-gray-600 mt-1" data-i18n="routing.savedDesc">Edit, rename, or delete saved flows.</p>
                 </div>
                 <div id="saved-list" class="space-y-3 flex-1 min-h-0 overflow-y-auto panel-scroll"></div>
             </aside>
@@ -529,8 +529,8 @@
         <div id="account-panel" class="grid gap-6 hidden routing-panels" style="grid-template-columns: 1fr 2fr;">
             <aside class="panel rounded-2xl p-4 flex flex-col min-h-0">
                 <div class="mb-3 flex-shrink-0">
-                    <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500">Models</h2>
-                    <p class="text-xs text-gray-600 mt-1">Official model IDs only.</p>
+                    <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500" data-i18n="routing.models">Models</h2>
+                    <p class="text-xs text-gray-600 mt-1" data-i18n="routing.modelsDesc">Official model IDs only.</p>
                 </div>
                 <div id="account-model-list" class="space-y-2 flex-1 min-h-0 overflow-y-auto panel-scroll"></div>
             </aside>
@@ -538,39 +538,39 @@
             <section class="panel rounded-2xl p-6 flex flex-col min-h-0">
                 <div class="flex items-start justify-between gap-3 mb-4 flex-shrink-0">
                     <div>
-                        <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500">Account Chain</h2>
-                        <p class="text-xs text-gray-600 mt-1">Ordered provider/account fallback.</p>
+                        <h2 class="text-sm uppercase tracking-[0.2em] text-gray-500" data-i18n="routing.accountChain">Account Chain</h2>
+                        <p class="text-xs text-gray-600 mt-1" data-i18n="routing.accountChainDesc">Ordered provider/account fallback.</p>
                     </div>
                     <div class="flex items-center gap-2 text-xs text-gray-400">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input id="smart-switch" type="checkbox" class="toggle-switch">
-                            <span>Smart Switch</span>
+                            <span data-i18n="routing.smartSwitch">Smart Switch</span>
                         </label>
                         <button id="account-save-btn" onclick="saveAccountRouting()"
                             class="action-btn px-3 py-2 rounded-lg font-bold text-gray-300 text-xs">
-                            Save
+                            <span data-i18n="common.save">Save</span>
                         </button>
                     </div>
                 </div>
 
-                <div id="account-route-title" class="text-sm text-gray-400 mb-3 flex-shrink-0">Select a model</div>
+                <div id="account-route-title" class="text-sm text-gray-400 mb-3 flex-shrink-0" data-i18n="routing.selectModel">Select a model</div>
 
                 <div class="grid gap-3 mb-4 flex-shrink-0" style="grid-template-columns: 1fr 1fr auto;">
                     <select id="account-provider-select" class="select-field w-full">
-                        <option value="">Provider</option>
+                        <option value="" data-i18n="routing.provider">Provider</option>
                     </select>
                     <select id="account-account-select" class="select-field w-full">
-                        <option value="">Account</option>
+                        <option value="" data-i18n="routing.account">Account</option>
                     </select>
                     <button onclick="addAccountRouteEntry()"
                         class="action-btn px-3 py-2 rounded-lg font-bold text-gray-300 text-xs">
-                        Add
+                        <span data-i18n="common.add">Add</span>
                     </button>
                 </div>
 
                 <div id="account-route-list" class="space-y-3 flex-1 min-h-0 overflow-y-auto panel-scroll"></div>
                 <div id="account-route-hint" class="text-xs text-gray-600 mt-3 flex-shrink-0">
-                    Smart Switch on: auto entries expand by account order.
+                    <span data-i18n="routing.smartHint">Smart Switch on: auto entries expand by account order.</span>
                 </div>
             </section>
         </div>
@@ -582,7 +582,7 @@
             activeFlow: 'anti-api-active-flow',
             privacyMode: 'anti-api-privacy-mode',
         };
-        const PROVIDER_ORDER = ['antigravity', 'codex', 'copilot', 'zed'];
+        const PROVIDER_ORDER = ['antigravity', 'codex', 'copilot', 'zed', 'kiro'];
         const MODEL_GROUPS = {
             claudeGpt: ['claude-sonnet-4-5', 'claude-sonnet-4-5-thinking', 'claude-opus-4-5-thinking', 'claude-opus-4-6-thinking', 'gpt-oss-120b'],
             gpro: ['gemini-3-pro-low', 'gemini-3-pro-high'],
@@ -644,6 +644,136 @@
         let officialModels = [];
         let selectedAccountModelId = null;
         let activeRoutingTab = 'flow';
+        function detectPreferredLanguage() {
+            const candidates = [];
+            if (Array.isArray(navigator.languages)) candidates.push(...navigator.languages);
+            if (navigator.language) candidates.push(navigator.language);
+            try {
+                const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+                if (intlLocale) candidates.push(intlLocale);
+            } catch { }
+            return candidates.join(' ').toLowerCase().includes('zh') ? 'zh-CN' : 'en';
+        }
+        let currentLanguage = localStorage.getItem('anti-api-language') || detectPreferredLanguage();
+        const I18N = {
+            en: {
+                'common.add': 'Add',
+                'common.new': 'New',
+                'common.save': 'Save',
+                'common.refresh': 'Refresh',
+                'routing.title': 'Routing',
+                'routing.subtitle': 'Build model chains with fallback on 429',
+                'routing.flowRouting': 'Flow Routing',
+                'routing.accountRouting': 'Account Routing',
+                'routing.backToQuota': 'Back to Quota',
+                'routing.accounts': 'Accounts',
+                'routing.accountsDesc': 'Drag a model block into the flow.',
+                'routing.flow': 'Flow',
+                'routing.flowDesc': 'Match by model name in requests.',
+                'routing.modelId': 'Model ID',
+                'routing.saved': 'Saved',
+                'routing.savedDesc': 'Edit, rename, or delete saved flows.',
+                'routing.models': 'Models',
+                'routing.modelsDesc': 'Official model IDs only.',
+                'routing.accountChain': 'Account Chain',
+                'routing.accountChainDesc': 'Ordered provider/account fallback.',
+                'routing.smartSwitch': 'Smart Switch',
+                'routing.selectModel': 'Select a model',
+                'routing.modelPrefix': 'Model',
+                'routing.provider': 'Provider',
+                'routing.account': 'Account',
+                'routing.autoSmart': 'Auto (Smart Switch)',
+                'routing.smartHint': 'Smart Switch on: auto entries expand by account order.',
+                'routing.manualHint': 'Smart Switch off: configure explicit accounts for each model.',
+                'routing.noOfficialModels': 'No official models available.',
+                'routing.noEntries': 'No entries yet.',
+                'routing.noAccounts': 'No accounts yet. Add accounts from /quota.',
+                'routing.noSavedFlows': 'No saved flows yet.',
+                'routing.editing': 'Editing',
+                'routing.edit': 'Edit',
+                'routing.delete': 'Delete',
+                'routing.remove': 'Remove',
+                'routing.up': 'Up',
+                'routing.down': 'Down',
+                'routing.dropHere': 'Drop here',
+                'routing.hops': 'hops',
+                'routing.flowFallback': 'fallback on 429',
+                'status.refreshing': 'Refreshing...',
+                'status.refreshed': 'Refreshed',
+                'status.refreshFailed': 'Refresh failed',
+                'status.saved': 'Saved',
+                'status.saving': 'Saving...',
+                'status.flowNameRequired': 'Flow name required',
+                'status.flowNameExists': 'Flow name already exists',
+            },
+            'zh-CN': {
+                'common.add': '添加',
+                'common.new': '新建',
+                'common.save': '保存',
+                'common.refresh': '刷新',
+                'routing.title': '路由',
+                'routing.subtitle': '构建模型链，并在 429 时自动回退',
+                'routing.flowRouting': '流程路由',
+                'routing.accountRouting': '账号路由',
+                'routing.backToQuota': '返回配额',
+                'routing.accounts': '账号',
+                'routing.accountsDesc': '拖动模型块到流程中。',
+                'routing.flow': '流程',
+                'routing.flowDesc': '按请求里的模型名匹配。',
+                'routing.modelId': '模型 ID',
+                'routing.saved': '已保存',
+                'routing.savedDesc': '编辑、重命名或删除已保存流程。',
+                'routing.models': '模型',
+                'routing.modelsDesc': '仅显示官方模型 ID。',
+                'routing.accountChain': '账号链',
+                'routing.accountChainDesc': '按顺序回退 provider/账号。',
+                'routing.smartSwitch': '智能切换',
+                'routing.selectModel': '选择模型',
+                'routing.modelPrefix': '模型',
+                'routing.provider': 'Provider',
+                'routing.account': '账号',
+                'routing.autoSmart': '自动（智能切换）',
+                'routing.smartHint': '智能切换开启：自动项会按账号顺序展开。',
+                'routing.manualHint': '智能切换关闭：请为每个模型配置明确账号。',
+                'routing.noOfficialModels': '没有可用官方模型。',
+                'routing.noEntries': '暂无条目。',
+                'routing.noAccounts': '暂无账号。请从 /quota 添加账号。',
+                'routing.noSavedFlows': '暂无保存的流程。',
+                'routing.editing': '编辑中',
+                'routing.edit': '编辑',
+                'routing.delete': '删除',
+                'routing.remove': '移除',
+                'routing.up': '上移',
+                'routing.down': '下移',
+                'routing.dropHere': '拖到这里',
+                'routing.hops': '跳',
+                'routing.flowFallback': '在 429 时回退',
+                'status.refreshing': '刷新中...',
+                'status.refreshed': '已刷新',
+                'status.refreshFailed': '刷新失败',
+                'status.saved': '已保存',
+                'status.saving': '保存中...',
+                'status.flowNameRequired': '需要流程名称',
+                'status.flowNameExists': '流程名称已存在',
+            }
+        };
+
+        function t(key) {
+            return I18N[currentLanguage]?.[key] || I18N.en[key] || key;
+        }
+
+        function applyLanguage(language = currentLanguage) {
+            currentLanguage = I18N[language] ? language : 'en';
+            document.documentElement.lang = currentLanguage === 'zh-CN' ? 'zh-CN' : 'en';
+            localStorage.setItem('anti-api-language', currentLanguage);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.textContent = t(el.dataset.i18n);
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder));
+            });
+        }
+        applyLanguage();
 
         // Privacy masking (synced from settings via localStorage cache)
         function getPrivacyMode() {
@@ -784,7 +914,7 @@
             container.innerHTML = '';
 
             if (officialModels.length === 0) {
-                container.innerHTML = '<div class="text-xs text-gray-500">No official models available.</div>';
+                container.innerHTML = `<div class="text-xs text-gray-500">${t('routing.noOfficialModels')}</div>`;
                 return;
             }
 
@@ -797,7 +927,7 @@
                 card.innerHTML = `
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-semibold text-gray-200">${model.label}</span>
-                        <span class="account-pill text-[10px] px-2 py-0.5 rounded-full">${count} hops</span>
+                        <span class="account-pill text-[10px] px-2 py-0.5 rounded-full">${count} ${t('routing.hops')}</span>
                     </div>
                     <div class="text-[10px] text-gray-500">${model.id}</div>
                 `;
@@ -820,12 +950,12 @@
             if (!title || !list || !providerSelect || !accountSelect) return;
 
             if (!selectedAccountModelId) {
-                title.textContent = 'Select a model';
+                title.textContent = t('routing.selectModel');
                 list.innerHTML = '';
                 return;
             }
 
-            title.textContent = `Model: ${selectedAccountModelId}`;
+            title.textContent = `${t('routing.modelPrefix')}: ${selectedAccountModelId}`;
             list.innerHTML = '';
 
             const route = ensureAccountRoute(selectedAccountModelId);
@@ -835,28 +965,28 @@
                 card.className = 'node rounded-xl px-3 py-3 text-xs flex items-center justify-between gap-3';
                 const rawLabel = entry.accountLabel || entry.accountId;
                 const display = entry.accountId === 'auto'
-                    ? 'Auto (Smart Switch)'
-                    : ((entry.provider === 'copilot' || entry.provider === 'zed') ? maskUsername(rawLabel) : maskEmail(rawLabel));
+                    ? t('routing.autoSmart')
+                    : ((entry.provider === 'copilot' || entry.provider === 'zed' || entry.provider === 'kiro') ? maskUsername(rawLabel) : maskEmail(rawLabel));
                 card.innerHTML = `
                     <div>
                         <div class="text-[10px] uppercase tracking-[0.2em] text-gray-500">${entry.provider}</div>
                         <div class="text-sm font-semibold text-gray-200 mt-1">${display}</div>
                     </div>
                     <div class="flex items-center gap-2 text-[10px] text-gray-500">
-                        <button onclick="moveAccountRouteEntry(${index}, -1)">Up</button>
-                        <button onclick="moveAccountRouteEntry(${index}, 1)">Down</button>
-                        <button onclick="removeAccountRouteEntry(${index})">Remove</button>
+                        <button onclick="moveAccountRouteEntry(${index}, -1)">${t('routing.up')}</button>
+                        <button onclick="moveAccountRouteEntry(${index}, 1)">${t('routing.down')}</button>
+                        <button onclick="removeAccountRouteEntry(${index})">${t('routing.remove')}</button>
                     </div>
                 `;
                 list.appendChild(card);
             });
 
             if (route.entries.length === 0) {
-                list.innerHTML = '<div class="text-xs text-gray-500">No entries yet.</div>';
+                list.innerHTML = `<div class="text-xs text-gray-500">${t('routing.noEntries')}</div>`;
             }
 
             const providers = getProvidersForModel(selectedAccountModelId);
-            providerSelect.innerHTML = '<option value="">Provider</option>';
+            providerSelect.innerHTML = `<option value="">${t('routing.provider')}</option>`;
             providers.forEach(provider => {
                 const option = document.createElement('option');
                 option.value = provider;
@@ -869,8 +999,8 @@
 
             if (hint) {
                 hint.textContent = accountRouting.smartSwitch
-                    ? 'Smart Switch on: auto entries expand by account order.'
-                    : 'Smart Switch off: only explicit account order is used.';
+                    ? t('routing.smartHint')
+                    : t('routing.manualHint');
             }
         }
 
@@ -881,14 +1011,14 @@
             if (!providerSelect || !accountSelect) return;
 
             const provider = providerSelect.value;
-            accountSelect.innerHTML = '<option value="">Account</option>';
+            accountSelect.innerHTML = `<option value="">${t('routing.account')}</option>`;
 
             if (!provider) return;
 
             if (smartSwitchInput?.checked) {
                 const autoOption = document.createElement('option');
                 autoOption.value = 'auto';
-                autoOption.textContent = 'Auto (Smart Switch)';
+                autoOption.textContent = t('routing.autoSmart');
                 accountSelect.appendChild(autoOption);
             }
 
@@ -913,7 +1043,7 @@
 
             const route = ensureAccountRoute(selectedAccountModelId);
             const displayName = accountId === 'auto'
-                ? 'Auto (Smart Switch)'
+                ? t('routing.autoSmart')
                 : (accounts[provider] || []).find(acc => acc.id === accountId)?.displayName;
             route.entries.push({
                 id: crypto.randomUUID(),
@@ -976,16 +1106,16 @@
             routingRefreshing = true;
             const status = dom.byId('save-status');
             if (showStatus && status) {
-                status.textContent = 'Refreshing...';
+                status.textContent = t('status.refreshing');
             }
             try {
                 await loadRouting();
                 if (showStatus && status) {
-                    status.textContent = 'Refreshed';
+                    status.textContent = t('status.refreshed');
                 }
             } catch {
                 if (showStatus && status) {
-                    status.textContent = 'Refresh failed';
+                    status.textContent = t('status.refreshFailed');
                 }
             } finally {
                 if (showStatus && status) {
@@ -1032,7 +1162,7 @@
             container.innerHTML = '';
 
             if (flows.length === 0) {
-                container.innerHTML = `<div class="text-xs text-gray-500">No saved flows yet.</div>`;
+                container.innerHTML = `<div class="text-xs text-gray-500">${t('routing.noSavedFlows')}</div>`;
                 return;
             }
 
@@ -1045,20 +1175,20 @@
                 header.className = 'flex items-center justify-between';
                 header.innerHTML = `
                     <div class="text-sm font-semibold text-gray-200">${flow.name}</div>
-                    <span class="account-pill text-[10px] px-2 py-0.5 rounded-full">${flow.entries?.length || 0} hops</span>
+                    <span class="account-pill text-[10px] px-2 py-0.5 rounded-full">${flow.entries?.length || 0} ${t('routing.hops')}</span>
                 `;
                 card.appendChild(header);
 
                 const hint = document.createElement('div');
                 hint.className = 'text-[10px] text-gray-500';
-                hint.textContent = isActive ? 'Editing' : 'Click to edit';
+                hint.textContent = isActive ? t('routing.editing') : t('routing.edit');
                 card.appendChild(hint);
 
                 const actions = document.createElement('div');
                 actions.className = 'flex items-center gap-3 text-[10px] text-gray-400';
 
                 const loadBtn = document.createElement('button');
-                loadBtn.textContent = isActive ? 'Editing' : 'Edit';
+                loadBtn.textContent = isActive ? t('routing.editing') : t('routing.edit');
                 loadBtn.disabled = isActive;
                 loadBtn.addEventListener('click', (event) => {
                     event.stopPropagation();
@@ -1067,7 +1197,7 @@
                 actions.appendChild(loadBtn);
 
                 const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Delete';
+                deleteBtn.textContent = t('routing.delete');
                 deleteBtn.addEventListener('click', (event) => {
                     event.stopPropagation();
                     deleteFlow(flow.id);
@@ -1162,7 +1292,7 @@
                     const storedValue = localStorage.getItem(collapseKey);
                     const isCollapsed = storedValue === null ? true : storedValue === 'true';
 
-                    const maskedDisplayName = provider === 'copilot' || provider === 'zed' ? maskUsername(account.displayName) : maskEmail(account.displayName);
+                    const maskedDisplayName = provider === 'copilot' || provider === 'zed' || provider === 'kiro' ? maskUsername(account.displayName) : maskEmail(account.displayName);
 
                     const header = document.createElement('div');
                     header.className = 'flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity';
@@ -1231,7 +1361,7 @@
             });
 
             if (totalAccounts === 0) {
-                container.innerHTML = `<div class="text-xs text-gray-500">No accounts yet. Add accounts from /quota.</div>`;
+                container.innerHTML = `<div class="text-xs text-gray-500">${t('routing.noAccounts')}</div>`;
             }
         }
 
@@ -1257,7 +1387,7 @@
                 node.addEventListener('drop', onNodeDrop);
                 // Apply privacy masking to account label
                 const rawAccountLabel = entry.accountLabel || entry.accountId;
-                const maskedAccountLabel = entry.provider === 'copilot' || entry.provider === 'zed' ? maskUsername(rawAccountLabel) : maskEmail(rawAccountLabel);
+                const maskedAccountLabel = entry.provider === 'copilot' || entry.provider === 'zed' || entry.provider === 'kiro' ? maskUsername(rawAccountLabel) : maskEmail(rawAccountLabel);
 
                 node.innerHTML = `
                     <div class="flex items-center justify-between">
@@ -1266,8 +1396,8 @@
                     </div>
                     <div class="text-xs text-gray-500 mt-2">${maskedAccountLabel}</div>
                     <div class="text-sm font-semibold text-gray-200 mt-1">${entry.label}</div>
-                    <div class="text-[10px] text-gray-500 mt-2">fallback on 429</div>
-                    <button class="text-[10px] text-gray-500 mt-2" onclick="removeEntry(${i})">Remove</button>
+                    <div class="text-[10px] text-gray-500 mt-2">${t('routing.flowFallback')}</div>
+                    <button class="text-[10px] text-gray-500 mt-2" onclick="removeEntry(${i})">${t('routing.remove')}</button>
                     <span class="flow-port flow-port-top"></span>
                     <span class="flow-port flow-port-bottom"></span>
                 `;
@@ -1277,7 +1407,7 @@
             const slot = document.createElement('div');
             slot.className = 'drop-slot';
             slot.dataset.index = flowEntries.length;
-            slot.textContent = 'Drop here';
+            slot.textContent = t('routing.dropHere');
             slot.addEventListener('dragover', onDragOver);
             slot.addEventListener('dragleave', onDragLeave);
             slot.addEventListener('drop', onDrop);
@@ -1380,14 +1510,14 @@
             const flowName = nameInput ? nameInput.value.trim() : '';
 
             if (!flowName) {
-                status.textContent = 'Flow name required';
+                status.textContent = t('status.flowNameRequired');
                 setTimeout(() => status.textContent = '', 2000);
                 return;
             }
 
             const existingByName = flows.find(flow => flow.name === flowName && flow.id !== activeFlowId);
             if (existingByName) {
-                status.textContent = 'Flow name already exists';
+                status.textContent = t('status.flowNameExists');
                 setTimeout(() => status.textContent = '', 2000);
                 return;
             }
@@ -1403,9 +1533,9 @@
             }
 
             activeFlowId = flowId;
-            status.textContent = 'Saving...';
+            status.textContent = t('status.saving');
             await persistRoutingConfig();
-            status.textContent = 'Saved';
+            status.textContent = t('status.saved');
             setTimeout(() => status.textContent = '', 2000);
         }
 

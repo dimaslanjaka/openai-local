@@ -11,6 +11,7 @@ const SETTINGS_DIR = getDataDir()
 const SETTINGS_FILE = join(SETTINGS_DIR, "settings.json")
 
 export interface AppSettings {
+    language: "en" | "zh-CN"
     preloadRouting: boolean
     autoNgrok: boolean
     autoOpenDashboard: boolean
@@ -24,6 +25,7 @@ export interface AppSettings {
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
+    language: detectSystemLanguage(),
     preloadRouting: true,
     autoNgrok: false,
     autoOpenDashboard: true,
@@ -34,6 +36,16 @@ const DEFAULT_SETTINGS: AppSettings = {
     trackUsage: true,
     optimizeQuotaSort: false,
     captureLogs: false,
+}
+
+function detectSystemLanguage(): "en" | "zh-CN" {
+    const locale = [
+        process.env.LC_ALL,
+        process.env.LC_MESSAGES,
+        process.env.LANG,
+        process.env.LANGUAGE,
+    ].filter(Boolean).join(" ").toLowerCase()
+    return locale.includes("zh") ? "zh-CN" : "en"
 }
 
 function ensureSettingsDir(): void {

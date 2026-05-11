@@ -1,9 +1,10 @@
 import { afterEach, expect, test } from "bun:test"
-import { clearDynamicCodexModels, clearDynamicCopilotModels, getProviderModels, setDynamicCodexModels, setDynamicCopilotModels } from "~/services/routing/models"
+import { clearDynamicCodexModels, clearDynamicCopilotModels, clearDynamicKiroModels, getProviderModels, setDynamicCodexModels, setDynamicCopilotModels, setDynamicKiroModels } from "~/services/routing/models"
 
 afterEach(() => {
     clearDynamicCopilotModels()
     clearDynamicCodexModels()
+    clearDynamicKiroModels()
 })
 
 test("copilot models fall back to static list when dynamic list is empty", () => {
@@ -57,4 +58,26 @@ test("codex dynamic models override static list when available", () => {
 
     const models = getProviderModels("codex")
     expect(models.map(model => model.id)).toEqual(["gpt-5.3-codex", "gpt-5.2-codex"])
+})
+
+test("kiro models fall back to static list when dynamic list is empty", () => {
+    clearDynamicKiroModels()
+    const models = getProviderModels("kiro")
+
+    expect(models.some(model => model.id === "auto")).toBe(true)
+    expect(models.some(model => model.id === "claude-sonnet-4.6")).toBe(true)
+})
+
+test("kiro models merge dynamic models before static fallback", () => {
+    setDynamicKiroModels([
+        { id: "custom-kiro-model", label: "Kiro - Custom" },
+        { id: "auto", label: "Kiro - Dynamic Auto" },
+    ])
+
+    const models = getProviderModels("kiro")
+    const custom = models.find(model => model.id === "custom-kiro-model")
+    const auto = models.find(model => model.id === "auto")
+
+    expect(custom?.label).toBe("Kiro - Custom")
+    expect(auto?.label).toBe("Kiro - Dynamic Auto")
 })
