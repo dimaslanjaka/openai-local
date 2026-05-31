@@ -1,0 +1,12 @@
+# Normalize line endings to LF for all text files (keeps containers happy on Windows checkouts)
+* text=auto eol=lf
+
+# Windows batch scripts must stay CRLF
+*.bat text eol=crlf
+
+# Binary assets: never normalize
+*.gif binary
+*.png binary
+*.jpg binary
+*.zip binary
+*.ico binary

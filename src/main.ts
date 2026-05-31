@@ -117,6 +117,7 @@ const start = defineCommand({
         // 启动服务器
         Bun.serve({
             fetch: server.fetch,
+            hostname: process.env.ANTI_API_HOST || "127.0.0.1",
             port: state.port,
             idleTimeout: 120,  // 2分钟超时，适应慢速 API 响应
         })
@@ -250,6 +251,7 @@ const remote = defineCommand({
         // 启动服务器
         Bun.serve({
             fetch: server.fetch,
+            hostname: process.env.ANTI_API_HOST || "127.0.0.1",
             port: state.port,
             idleTimeout: 120,
         })

@@ -1,11 +1,28 @@
+# VCS / editor / CI
 .git
+.github
 .gitignore
+.gitattributes
+.editorconfig
 .DS_Store
+
+# Dependencies & build output (reinstalled/rebuilt in the image)
 node_modules
 dist
 data
 *.log
 *.zip
-rust-proxy/target
+
+# Not used at runtime inside the container
+rust-proxy
+scripts
+packaging
 test
 docs
+
+# Host launchers / docs not needed in the image
+*.bat
+*.command
+/a
+CLAUDE.md
+MULTI-ACCOUNT.md

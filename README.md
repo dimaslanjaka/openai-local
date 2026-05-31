@@ -24,7 +24,7 @@
 - **Kiro provider support** - Added Kiro account import, quota visibility, model routing, and reverse-proxy support alongside existing providers
 - **Dashboard i18n** - Added global Chinese support, system-language default detection, and a Settings language switch
 - **Account diagnostics assistant** - Added a localhost-only diagnostics panel for checking missing account files, CLI tools, callback ports, and provider setup
-- **Panel updates** - Added a localhost-only update checker and source-install updater, with package-manager safeguards for Homebrew, WinGet, and Docker
+- **Panel updates** - Added a localhost-only update checker and source-install updater, with package-manager safeguards for WinGet and Docker
 - **Docker support hardened** - Updated Docker defaults, OAuth port ranges, health checks, development compose separation, and Docker-specific update guidance
 
 <details>
@@ -111,27 +111,6 @@ https://batch.1key.me
 
 ## Quick Start
 
-### Homebrew (macOS Apple Silicon)
-
-```bash
-# Add the tap
-brew tap ink1ing/anti-api
-
-# Install Anti-API
-brew install anti-api
-
-# Start Anti-API directly from any terminal
-anti-api
-```
-
-Notes:
-- This formula installs a prebuilt macOS Apple Silicon bundle. It does not download Rust, LLVM, or Bun at install time.
-- Upgrade with `brew upgrade anti-api`.
-- `bun run brew:formula` is a maintainer command that refreshes `Formula/anti-api.rb` for the current tagged release.
-- `bun run brew:bundle` is a maintainer command that builds the release asset consumed by Homebrew.
-- `anti-api --update` is intentionally disabled for Homebrew-managed installs so Homebrew remains the source of truth.
-- After installation, `anti-api` starts the service directly in any terminal.
-
 ### Linux
 
 ```bash
@@ -161,52 +140,84 @@ Double-click `start.command` to launch.
 
 ### Docker
 
-Build:
+Multi-arch images (`linux/amd64`, `linux/arm64`) are published to GHCR, so most users never build locally.
+
+#### Quick start (recommended)
 
 ```bash
-docker build -t anti-api .
+docker run -d --name anti-api \
+  -p 8964:8964 -p 1455-1465:1455-1465 -p 51121-51131:51121-51131 \
+  -v anti-api-data:/app/data \
+  ghcr.io/ink1ing/anti-api:latest
 ```
 
-Run:
+Or with Compose (pulls the prebuilt image, then runs in the background):
 
 ```bash
-docker run --rm -it \\
-  -p 8964:8964 \\
-  -p 1455-1465:1455-1465 \\
-  -p 51121-51131:51121-51131 \\
-  -e ANTI_API_DATA_DIR=/app/data \\
-  -e ANTI_API_NO_OPEN=1 \\
-  -e ANTI_API_OAUTH_NO_OPEN=1 \\
-  -e ANTI_API_PACKAGE_MANAGER=docker \\
-  -e ANTI_API_NO_SELF_UPDATE=1 \\
-  -v $HOME/.anti-api:/app/data \\
-  anti-api
+docker compose pull
+docker compose up -d
 ```
 
-Compose:
+On **Windows**, run the exact same commands in PowerShell. The named volume `anti-api-data` is managed by Docker, so there is no `$HOME`/path setup to get wrong.
+
+#### First login (once)
+
+The container can't read your local IDE credentials, so sign in via OAuth:
+
+1. Open the dashboard: <http://localhost:8964/quota>
+2. Click **Login** for a provider:
+   - **GitHub Copilot** — easiest in Docker: enter the shown device code at <https://github.com/login/device>.
+   - **Antigravity / Codex** — the panel (and `docker logs anti-api`) prints an `Open this URL to login: ...` link. Open it in your browser; the callback returns to `localhost` and is captured by the mapped ports.
+3. When the account appears on the dashboard, point your client at `http://localhost:8964` (token can be any value).
+
+> You can also log in from a terminal: `docker compose exec anti-api bun run src/main.ts add-account`.
+
+#### Ports
+
+| Port range | Purpose |
+|---|---|
+| `8964` | Main API + dashboard |
+| `51121-51131` | Antigravity OAuth callback |
+| `1455-1465` | Codex OAuth callback |
+
+Copilot uses a device-code flow and needs no callback port.
+
+#### Running on a remote host (NAS / VPS)
+
+OAuth callbacks redirect to `localhost`, which won't reach a remote box from your laptop's browser. Either:
+
+- set `ANTI_API_OAUTH_REDIRECT_URL=http://YOUR_HOST:51121/oauth-callback` and open the printed URL, or
+- use **Copilot** (device flow, no callback), or
+- SSH-forward the ports: `ssh -L 8964:localhost:8964 -L 51121:localhost:51121 user@host`.
+
+The server has **no authentication** — do not expose these ports to the public internet. Keep them on a private network or behind your own auth/tunnel.
+
+#### Data & migration
+
+Accounts and routing config live in the `anti-api-data` named volume. To **reuse data from a native install**, mount your host folder instead of the named volume in `docker-compose.yml`:
+
+```yaml
+    volumes:
+      - ${HOME}/.anti-api:/app/data         # macOS / Linux
+      # - ${USERPROFILE}/.anti-api:/app/data  # Windows
+```
+
+To import host provider credentials (Codex/AWS/Kiro/etc.) read-only, uncomment the example mounts in `docker-compose.yml`.
+
+#### Development (hot reload)
 
 ```bash
-docker compose up --build
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
-Developer override (no rebuild, use local `src/` and `public/`):
+#### Notes
 
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --no-build
-```
-
-Notes:
-- OAuth callbacks use ports `51121-51131` for Antigravity and `1455-1465` for Codex browser OAuth. Make sure they are mapped.
-- If running on a remote host, set `ANTI_API_OAUTH_REDIRECT_URL` to a public URL like `http://YOUR_HOST:51121/oauth-callback`.
-- The bind mount reuses your local `~/.anti-api` data so Docker shares the same accounts and routing config.
-- Local-import providers cannot see host credentials unless you mount them into `/app/data` (see commented examples in `docker-compose.yml` for `.codex`, `.cli-proxy-api`, `.aws`, Kiro CLI, and Amazon Q).
-- Set `ANTI_API_NO_OPEN=1` to avoid trying to open the browser inside a container.
-- In-panel self-update is disabled in Docker. Rebuild or pull the image with `docker compose up -d --build`.
-- If Copilot TLS fails in restricted networks, set `ANTI_API_COPILOT_INSECURE_TLS=1` (not recommended for general use).
-- If Codex TLS fails in restricted networks, set `ANTI_API_CODEX_INSECURE_TLS=1` (not recommended for general use).
-- Set Codex default reasoning effort with `ANTI_API_CODEX_REASONING_EFFORT=low|medium|high` (default: `medium`).
-- If Docker Hub is unstable, the default base image uses GHCR. You can override with `BUN_IMAGE=oven/bun:1.3.5`.
-- ngrok is installed in the image for Linux amd64/arm64.
+- Build locally instead of pulling: `docker compose up -d --build` (the image already ships the toolchain for the native `better-sqlite3` module).
+- In-panel self-update is disabled in Docker; upgrade with `docker compose pull && docker compose up -d`.
+- Restricted networks: `ANTI_API_COPILOT_INSECURE_TLS=1` / `ANTI_API_CODEX_INSECURE_TLS=1` bypass TLS verification (not recommended generally).
+- `ANTI_API_CODEX_REASONING_EFFORT=low|medium|high` sets Codex default effort (default `medium`).
+- Override the base image if a registry is slow: `BUN_IMAGE=oven/bun:1.3.5 docker compose build`.
+- ngrok is bundled for Linux amd64/arm64.
 
 ## Development
 
@@ -437,7 +448,7 @@ MIT
 - **新增 Kiro Provider 支持** - 加入 Kiro 账号导入、配额展示、模型路由和反向代理能力
 - **控制面板国际化** - 增加全局中文支持、默认跟随系统语言，并在设置页提供语言切换
 - **账号诊断助手** - 新增仅限本机访问的诊断面板，用于检查账号文件、CLI 工具、回调端口和 provider 配置
-- **面板更新能力** - 新增仅限本机访问的检查更新和源码安装一键更新，并对 Homebrew、WinGet、Docker 做保护提示
+- **面板更新能力** - 新增仅限本机访问的检查更新和源码安装一键更新，并对 WinGet、Docker 做保护提示
 - **完善 Docker 支持** - 更新 Docker 默认配置、OAuth 端口范围、健康检查、开发 compose 分离和 Docker 更新说明
 
 <details>
@@ -482,27 +493,6 @@ MIT
 - **Credit 说明** - Zed 的月度 credit 取决于具体计划类型。例如 Zed Student 官方说明为每月 $10 AI token credits，而普通 Pro 页面可能显示不同额度
 
 ## 快速开始
-
-### Homebrew（macOS Apple Silicon）
-
-```bash
-# 添加 tap
-brew tap ink1ing/anti-api
-
-# 安装 Anti-API
-brew install anti-api
-
-# 在任意终端直接启动 Anti-API
-anti-api
-```
-
-说明：
-- 该 formula 直接安装预编译的 macOS Apple Silicon 包，安装时不会再下载 Rust、LLVM 或 Bun。
-- 升级直接使用 `brew upgrade anti-api`。
-- `bun run brew:formula` 是维护者命令，用于按当前 tag 版本刷新 `Formula/anti-api.rb`。
-- `bun run brew:bundle` 是维护者命令，用于构建 Homebrew 依赖的发布包。
-- Homebrew 安装会禁用 `anti-api --update`，避免和 Homebrew 的包管理冲突。
-- 安装完成后，在任意终端输入 `anti-api` 会直接启动服务。
 
 ### Windows
 

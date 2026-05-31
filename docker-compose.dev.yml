@@ -1,5 +1,7 @@
 services:
   anti-api:
+    # Hot-reload from mounted ./src and ./public (overrides the image CMD).
+    command: ["bun", "run", "--watch", "src/main.ts", "start"]
     volumes:
       - ./src:/app/src
       - ./public:/app/public

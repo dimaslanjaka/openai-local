@@ -78,9 +78,6 @@ async function getCommandOutput(command: string, args: string[]): Promise<string
 
 function getPackageManagerBlock(): { source: UpdateSource; message: string; commandHint?: string } | null {
     const manager = (process.env.ANTI_API_PACKAGE_MANAGER || "").toLowerCase()
-    if (manager === "homebrew") {
-        return { source: "package-manager", message: "This installation is managed by Homebrew.", commandHint: "brew upgrade anti-api" }
-    }
     if (manager === "winget") {
         return { source: "package-manager", message: "This installation is managed by WinGet.", commandHint: "winget upgrade anti-api" }
     }

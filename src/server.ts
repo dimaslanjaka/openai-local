@@ -78,7 +78,17 @@ server.use(async (c, next) => {
         // All successful requests are silent (detailed 200 logs are handled elsewhere)
     })
 })
-server.use(cors())
+server.use(cors({
+    // 只允许同源/本机来源跨域读取，阻止任意网页驱动本地代理
+    origin: (origin) => {
+        if (!origin) return origin
+        try {
+            const host = new URL(origin).hostname
+            if (host === "localhost" || host === "127.0.0.1" || host === "::1") return origin
+        } catch { }
+        return null
+    },
+}))
 
 // 启动时自动加载已保存的认证
 initAuth()

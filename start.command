@@ -40,9 +40,7 @@ done
 
 do_update() {
     if [ "${ANTI_API_NO_SELF_UPDATE:-0}" = "1" ] || [ -n "${ANTI_API_PACKAGE_MANAGER:-}" ]; then
-        if [ "${ANTI_API_PACKAGE_MANAGER:-}" = "homebrew" ]; then
-            echo "This installation is managed by Homebrew. Run: brew upgrade anti-api"
-        elif [ "${ANTI_API_PACKAGE_MANAGER:-}" = "winget" ]; then
+        if [ "${ANTI_API_PACKAGE_MANAGER:-}" = "winget" ]; then
             echo "This installation is managed by WinGet. Run: winget upgrade anti-api"
         else
             echo "Self-update is disabled for this installation."

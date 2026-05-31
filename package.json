@@ -8,9 +8,6 @@
     "start": "bun run src/main.ts start",
     "build": "bun build src/main.ts --outdir dist --target bun",
     "test": "bun test ./test --test-concurrency 1",
-    "brew:bundle": "bun run scripts/build-homebrew-package.ts",
-    "brew:formula": "bun run scripts/update-homebrew-formula.ts",
-    "brew:tap:sync": "bash scripts/sync-homebrew-tap.sh",
     "winget:bundle": "bun run scripts/build-winget-package.ts",
     "winget:manifest": "bun run scripts/update-winget-manifest.ts",
     "winget:sync": "bash scripts/sync-winget-pkgs.sh"

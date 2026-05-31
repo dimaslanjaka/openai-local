@@ -1,5 +1,8 @@
 services:
   anti-api:
+    # Default to the prebuilt multi-arch image from GHCR (no local build needed).
+    # `docker compose pull` fetches it; `docker compose up --build` builds locally instead.
+    image: ghcr.io/ink1ing/anti-api:latest
     build:
       context: .
       args:
@@ -10,17 +13,25 @@ services:
       - "51121-51131:51121-51131"
     environment:
       ANTI_API_DATA_DIR: /app/data
+      ANTI_API_HOST: 0.0.0.0
       ANTI_API_OAUTH_NO_OPEN: "1"
       ANTI_API_NO_OPEN: "1"
       ANTI_API_PACKAGE_MANAGER: docker
       ANTI_API_NO_SELF_UPDATE: "1"
     volumes:
-      - ${HOME}/.anti-api:/app/data
-      # Optional read-only host credentials for local-import providers.
-      # Uncomment only the providers you want Docker to import from the host.
+      # Default: Docker-managed named volume — identical on Windows/macOS/Linux,
+      # no $HOME/$USERPROFILE expansion needed.
+      - anti-api-data:/app/data
+      # To reuse existing host data instead, comment the line above and pick one:
+      #   - ${HOME}/.anti-api:/app/data         # macOS / Linux
+      #   - ${USERPROFILE}/.anti-api:/app/data  # Windows (PowerShell/CMD)
+      # Optional read-only host credentials for local-import providers (macOS/Linux):
       # - ${HOME}/.codex:/app/data/.codex:ro
       # - ${HOME}/.cli-proxy-api:/app/data/.cli-proxy-api:ro
       # - ${HOME}/.aws:/app/data/.aws:ro
       # - ${HOME}/.local/share/kiro-cli:/app/data/.local/share/kiro-cli:ro
       # - ${HOME}/.local/share/amazon-q:/app/data/.local/share/amazon-q:ro
     restart: unless-stopped
+
+volumes:
+  anti-api-data:

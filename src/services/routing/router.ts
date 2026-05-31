@@ -38,7 +38,6 @@ interface RoutedRequest {
 
 type FlowStickyState = {
     cursor: number
-    lastProbeAt?: number
 }
 type AccountStickyState = {
     cursor: number
@@ -73,8 +72,10 @@ function isEntryUsable(entry: RoutingEntry): boolean {
     return !!authStore.getAccount(entry.provider, entry.accountId)
 }
 
-// 🆕 Router 级别的 rate-limit 状态（独立于 accountManager）
-const routerRateLimits = new Map<string, number>()  // "provider:accountId" -> expiry timestamp
+// Router 级 rate-limit 兜底（仅 antigravity）：独立于 accountManager，
+// 因此能在请求期 accountManager.load() 重置 rateLimitedUntil 后仍保住限流状态。
+// 其它 provider 的限流仅依赖 authStore.isRateLimited。
+const routerRateLimits = new Map<string, number>()  // "antigravity:accountId" -> expiry timestamp
 const PROVIDER_ORDER: AuthProvider[] = ["antigravity", "codex", "copilot", "zed", "kiro"]
 const flowStickyStates = new Map<string, FlowStickyState>()
 const accountStickyStates = new Map<string, AccountStickyState>()
@@ -261,7 +262,6 @@ function getAccountDisplay(provider: AuthProvider, accountId: string): string {
 }
 
 const FALLBACK_STATUSES = new Set([401, 403, 408, 429, 500, 503, 529])
-const FLOW_PROBE_INTERVAL_MS = 30_000
 const DEFAULT_ROUTER_COOLDOWN_MS = 60_000
 const ANTIGRAVITY_SERVER_ERROR_COOLDOWN_MS = 20_000
 
@@ -454,7 +454,6 @@ function applyFlowRateLimit(entry: RoutingEntry, error: UpstreamError, requestMo
 
     if (entry.provider !== "antigravity") {
         authStore.markRateLimited(entry.provider, entry.accountId, error.status, error.body, error.retryAfter)
-        markRouterRateLimited(entry.provider, entry.accountId, DEFAULT_ROUTER_COOLDOWN_MS)
     }
 }
 
@@ -500,20 +499,8 @@ async function createHostedProviderCompletion(
     throw new Error("Unsupported provider")
 }
 
-function shouldProbeFlowHead(flowState: FlowStickyState | null, error: UpstreamError): boolean {
-    if (!flowState || error.status !== 429) return false
-    if (!isQuotaExhausted(error)) return false
-    const now = Date.now()
-    if (!flowState.lastProbeAt || now - flowState.lastProbeAt >= FLOW_PROBE_INTERVAL_MS) {
-        flowState.lastProbeAt = now
-        return true
-    }
-    return false
-}
-
 async function createFlowCompletionWithEntries(request: RoutedRequest, entries: RoutingEntry[], flowKey?: string) {
     let lastError: Error | null = null
-    let probedHead = false
     const flowState = flowKey ? getFlowStickyState(flowKey, entries.length) : null
     const startIndex = flowState?.cursor ?? 0
 
@@ -567,46 +554,6 @@ async function createFlowCompletionWithEntries(request: RoutedRequest, entries: 
                         advanceFlowCursor(flowState, entries, startIndex)
                     }
                 }
-
-                if (
-                    flowState &&
-                    index === startIndex &&
-                    flowState.cursor === startIndex &&
-                    !probedHead &&
-                    entries.length > 1 &&
-                    (isQuotaExhausted(error) || shouldProbeFlowHead(flowState, error))
-                ) {
-                    const probeIndex = 0
-                    if (probeIndex !== index) {
-                        const probeEntry = entries[probeIndex]
-                        if (!shouldSkipFlowEntry(probeEntry, entries.length, { ignoreRateLimit: true })) {
-                            probedHead = true
-                            try {
-                                const probeResult = await attemptEntry(probeEntry)
-                                flowState.cursor = probeIndex
-                                return probeResult
-                            } catch (probeError) {
-                                lastError = probeError as Error
-                                if (probeError instanceof UpstreamError && shouldFallbackOnUpstream(probeEntry, probeError)) {
-                                    const shouldAdvanceProbe = shouldAdvanceCursorOnError(probeEntry, probeError)
-                                    if (shouldAdvanceProbe) {
-                                        applyFlowRateLimit(probeEntry, probeError, request.model)
-                                    }
-                                } else if (isTransientTransportError(probeError)) {
-                                    if (probeEntry.provider !== "antigravity") {
-                                        authStore.markRateLimited(probeEntry.provider, probeEntry.accountId, 500, (probeError as Error).message)
-                                    }
-                                } else {
-                                    throw probeError
-                                }
-                            }
-                        }
-                    }
-
-                    if (index < entries.length - 1) {
-                        flowState.cursor = index + 1
-                    }
-                }
                 continue
             }
             if (isTransientTransportError(error)) {
@@ -642,29 +589,7 @@ async function createFlowCompletionWithEntries(request: RoutedRequest, entries: 
             entry = cursorEntry
         }
         try {
-            if (entry.provider === "antigravity") {
-                const accountId = entry.accountId === "auto" ? undefined : entry.accountId
-                setRequestLogContext({ model: entry.modelId, provider: "antigravity", account: entry.accountId, routeTag: "fr" })
-                return await createChatCompletionWithOptions({ ...request, model: entry.modelId }, {
-                    accountId,
-                    allowRotation: accountId ? false : true,
-                    routeTag: "fr",
-                })
-            }
-
-            const account = authStore.getAccount(entry.provider, entry.accountId)
-            if (!account) {
-                throw new Error("Account not found")
-            }
-            const accountDisplay = account.login || account.email || entry.accountId
-            setRequestLogContext({ model: entry.modelId, provider: entry.provider, account: accountDisplay, routeTag: "fr" })
-
-            const startTime = Date.now()
-            const result = await createHostedProviderCompletion(entry.provider, account, entry.modelId, request)
-            recordProviderUsage(entry.modelId, result)
-            const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
-            console.log(formatSuccessLine({ elapsed, model: request.model, provider: entry.provider, account: accountDisplay, routeTag: "fr" }))
-            return result
+            return await attemptEntry(entry)
         } catch (error) {
             lastError = error as Error
             throw error
@@ -755,7 +680,6 @@ async function createAccountCompletionWithEntries(request: RoutedRequest, entrie
                         }
                     } else {
                         authStore.markRateLimited(entry.provider, entry.accountId, error.status, error.body, error.retryAfter)
-                        markRouterRateLimited(entry.provider, entry.accountId, DEFAULT_ROUTER_COOLDOWN_MS)
                     }
                     advanceAccountCursor(accountState, entries.length, index)
                 }
@@ -801,7 +725,6 @@ export async function createRoutedCompletion(request: RoutedRequest) {
 
 async function* createFlowCompletionStreamWithEntries(request: RoutedRequest, entries: RoutingEntry[], flowKey?: string): AsyncGenerator<string, void, unknown> {
     let lastError: Error | null = null
-    let probedHead = false
     const flowState = flowKey ? getFlowStickyState(flowKey, entries.length) : null
     const startIndex = flowState?.cursor ?? 0
 
@@ -881,46 +804,6 @@ async function* createFlowCompletionStreamWithEntries(request: RoutedRequest, en
                         advanceFlowCursor(flowState, entries, startIndex)
                     }
                 }
-
-                if (
-                    flowState &&
-                    index === startIndex &&
-                    flowState.cursor === startIndex &&
-                    !probedHead &&
-                    entries.length > 1 &&
-                    (isQuotaExhausted(error) || shouldProbeFlowHead(flowState, error))
-                ) {
-                    const probeIndex = 0
-                    if (probeIndex !== index) {
-                        const probeEntry = entries[probeIndex]
-                        if (!shouldSkipFlowEntry(probeEntry, entries.length, { ignoreRateLimit: true })) {
-                            probedHead = true
-                            try {
-                                yield* streamEntry(probeEntry)
-                                flowState.cursor = probeIndex
-                                return
-                            } catch (probeError) {
-                                lastError = probeError as Error
-                                if (probeError instanceof UpstreamError && shouldFallbackOnUpstream(probeEntry, probeError)) {
-                                    const shouldAdvanceProbe = shouldAdvanceCursorOnError(probeEntry, probeError)
-                                    if (shouldAdvanceProbe) {
-                                        applyFlowRateLimit(probeEntry, probeError, request.model)
-                                    }
-                                } else if (isTransientTransportError(probeError)) {
-                                    if (probeEntry.provider !== "antigravity") {
-                                        authStore.markRateLimited(probeEntry.provider, probeEntry.accountId, 500, (probeError as Error).message)
-                                    }
-                                } else {
-                                    throw probeError
-                                }
-                            }
-                        }
-                    }
-
-                    if (index < entries.length - 1) {
-                        flowState.cursor = index + 1
-                    }
-                }
                 continue
             }
             if (isTransientTransportError(error)) {
@@ -955,55 +838,7 @@ async function* createFlowCompletionStreamWithEntries(request: RoutedRequest, en
             }
             entry = cursorEntry
         }
-        if (entry.provider === "antigravity") {
-            const accountId = entry.accountId === "auto" ? undefined : entry.accountId
-            setRequestLogContext({ model: entry.modelId, provider: "antigravity", account: entry.accountId, routeTag: "fr" })
-            yield* createChatCompletionStreamWithOptions({ ...request, model: entry.modelId }, {
-                accountId,
-                allowRotation: accountId ? false : true,
-                routeTag: "fr",
-            })
-            return
-        }
-
-        const account = authStore.getAccount(entry.provider, entry.accountId)
-        if (!account) {
-            throw new Error("Account not found")
-        }
-        const accountDisplay = account.login || account.email || entry.accountId
-        setRequestLogContext({ model: entry.modelId, provider: entry.provider, account: accountDisplay, routeTag: "fr" })
-
-        const startTime = Date.now()
-        const completion = await createHostedProviderCompletion(entry.provider, account, entry.modelId, request)
-
-        if (!completion) {
-            throw new Error("Empty completion")
-        }
-
-        yield buildMessageStart(request.model)
-        let blockIndex = 0
-        for (const block of completion.contentBlocks) {
-            if (block.type === "tool_use") {
-                yield buildContentBlockStart(blockIndex, "tool_use", { id: block.id!, name: block.name! })
-                const inputText = JSON.stringify(block.input || {})
-                yield buildInputJsonDelta(blockIndex, inputText)
-                yield buildContentBlockStop(blockIndex)
-                blockIndex++
-                continue
-            }
-
-            yield buildContentBlockStart(blockIndex, "text")
-            yield buildTextDelta(blockIndex, block.text || "")
-            yield buildContentBlockStop(blockIndex)
-            blockIndex++
-        }
-        yield buildMessageDelta(completion.stopReason || "end_turn", completion.usage)
-        yield buildMessageStop()
-
-        recordProviderUsage(entry.modelId, completion)
-
-        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
-        console.log(formatSuccessLine({ elapsed, model: request.model, provider: entry.provider, account: accountDisplay, routeTag: "ar" }))
+        yield* streamEntry(entry)
         return
     }
 
@@ -1117,7 +952,6 @@ async function* createAccountCompletionStreamWithEntries(request: RoutedRequest,
                         }
                     } else {
                         authStore.markRateLimited(entry.provider, entry.accountId, error.status, error.body, error.retryAfter)
-                        markRouterRateLimited(entry.provider, entry.accountId, DEFAULT_ROUTER_COOLDOWN_MS)
                     }
                     advanceAccountCursor(accountState, entries.length, index)
                 }
