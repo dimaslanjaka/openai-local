@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": true,
+  "snapshot": false,
+  "plugin": [
+    "envsitter-guard@latest",
+    "opencode-mem",
+    "oh-my-opencode-slim@latest",
+    "opencode-agent-memory@https://github.com/dimaslanjaka/opencode-file-memory/raw/refs/heads/main/release/opencode-agent-memory.tgz",
+    "@tarquinen/opencode-smart-title@latest",
+    "@tarquinen/opencode-dcp@latest",
+    ".opencode/plugins/opencode-request-logger"
+  ],
+  "instructions": [
+    "AGENTS.md",
+    ".github/instructions/*.md",
+    ".github/*.md",
+    "packages/*/AGENTS.md"
+  ],
+  "mcp": {
+    "playwright": {
+      "enabled": true,
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"]
+    }
+  }
+}

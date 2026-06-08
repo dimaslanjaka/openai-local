@@ -15,7 +15,8 @@
             ]
         },
         "types": [
-            "bun-types"
+            "bun-types",
+            "node"
         ]
     },
     "include": [
