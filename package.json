@@ -18,11 +18,13 @@
     "@connectrpc/connect": "^2.0.0",
     "@connectrpc/connect-node": "^2.0.0",
     "@connectrpc/connect-web": "^2.1.1",
+    "@heyputer/puter.js": "^2.5.1",
     "better-sqlite3": "^11.7.0",
     "citty": "^0.1.6",
     "consola": "^3.2.3",
     "hono": "^4.6.14",
     "localtunnel": "^2.0.2",
+    "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/b9d2e7bfa/packages/sbg-utility/release/sbg-utility.tgz",
     "undici": "^7.16.0"
   },
   "devDependencies": {
