@@ -24,7 +24,7 @@
     "consola": "^3.2.3",
     "hono": "^4.6.14",
     "localtunnel": "^2.0.2",
-    "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/b9d2e7bfa/packages/sbg-utility/release/sbg-utility.tgz",
+    "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/sbg-utility/packages/sbg-utility/release/sbg-utility.tgz",
     "undici": "^7.16.0"
   },
   "devDependencies": {
